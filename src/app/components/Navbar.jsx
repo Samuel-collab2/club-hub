@@ -42,8 +42,10 @@ const BlueBtn = styled.button`
   justify-content: center;
   align-items: center;
   background-color: #000a3e;
+  border: none;
   border-radius: 15px;
   color: white;
   padding: 5px 10px;
   gap: 5px;
+  cursor: pointer;
 `;
