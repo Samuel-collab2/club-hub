@@ -2,11 +2,23 @@ import { NextResponse } from "next/server";
 import Database from "../../../database";
 import { currentUser } from "@clerk/nextjs/server";
 
-function checkIfUserExists(clerkId) {
-    return Database.from("user").select("*").eq("clerkId", clerkId);
+async function checkIfUserExists(clerkId) {
+    const { data, error } = Database.from("user")
+        .select("*")
+        .eq("clerkId", clerkId);
+
+    if (error) {
+        throw new Error(error);
+    }
+
+    if (data === undefined){
+        return false;
+    } else {
+        return data.length > 0;
+    }
 }
 
-// POST /api/campus
+// POST /api/login/addToSupabase
 export async function POST(req) {
   try {
     const user = await currentUser();
@@ -19,10 +31,9 @@ export async function POST(req) {
     const email = user.email;
     const clerkId = user.id;
 
-    if (checkIfUserExists(clerkId)) {
-        return NextResponse.json(
-            { message: "User already exists" }
-        )
+    const userExists = await checkIfUserExists(clerkId);
+    if (userExists) {
+      return NextResponse.json({ message: "User already exists" });
     }
 
     const { data, error } = await Database.from("user")
@@ -38,7 +49,7 @@ export async function POST(req) {
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error(`Error creating campus: ${error}`);
+    console.error(`Error inserting user to supabase: ${error}`);
     return NextResponse.error(error);
   }
 }
