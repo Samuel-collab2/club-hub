@@ -3,17 +3,27 @@
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import LoginIcon from "@mui/icons-material/LoginTwoTone";
+import { ClerkProvider, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+
+import { useClerk } from "@clerk/clerk-react";
 
 import Logo from "./Logo";
 import SearchBar from "./SearchBar";
 
 export default function Navbar({}) {
   return (
-    <NavbarContainer>
-      <Logo id="logo" />
-      <SearchBar id="search-bar" />
-      <LoginBtn id="login-btn" />
-    </NavbarContainer>
+    <ClerkProvider>
+      <NavbarContainer>
+        <Logo id="logo" />
+        <SearchBar id="search-bar" />
+        <SignedOut>
+          <LoginBtn id="login-btn" />
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+      </NavbarContainer>
+    </ClerkProvider>
   );
 }
 
@@ -43,15 +53,10 @@ const NavbarContainer = styled.div`
 
 function LoginBtn({ ...props }) {
   const router = useRouter();
+  const clerk = useClerk();
 
   return (
-    <BlueBtn
-      type="button"
-      onClick={() => {
-        router.push("/login");
-      }}
-      {...props}
-    >
+    <BlueBtn type="button" onClick={() => clerk.openSignIn({})} {...props}>
       <LoginIcon /> Login
     </BlueBtn>
   );
