@@ -1,5 +1,7 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client"
+
+import { useUser } from "@clerk/clerk-react"
+import { useEffect } from "react"
 
 const links = [
   { name: 'Join Clubs', href: '#' },
@@ -15,6 +17,19 @@ const stats = [
 ]
 
 export default function Example() {
+
+  const { isSignedIn } = useUser()
+  useEffect(() => {
+    if (isSignedIn) {
+      fetch('/api/login/addToSupabase', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+    }
+  }, [isSignedIn])
+
   return (
       
     <div className="relative isolate overflow-hidden bg-gray-900 py-24 sm:py-32">
