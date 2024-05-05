@@ -20,7 +20,7 @@ export default function Navbar({}) {
           <LoginBtn id="login-btn" />
         </SignedOut>
         <SignedIn>
-          <UserButton />
+          <UserButton userProfileMode="modal" />
         </SignedIn>
       </NavbarContainer>
     </ClerkProvider>
@@ -52,7 +52,6 @@ const NavbarContainer = styled.div`
 `;
 
 function LoginBtn({ ...props }) {
-  const router = useRouter();
   const clerk = useClerk();
 
   return (
