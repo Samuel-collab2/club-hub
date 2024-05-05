@@ -1,40 +1,13 @@
 "use client"
 
-import { useUser } from "@clerk/clerk-react"
-import { useEffect } from "react"
-
-const links = [
-  { name: 'Join Clubs', href: '#' },
-  { name: 'Create Clubs', href: '#' },
-  { name: 'View Events', href: '#' },
-  { name: 'Register', href: '#' },
-]
-const stats = [
-  { name: 'Number of BCIT Clubs', value: '10' },
-  { name: 'Number of Other Clubs', value: '5' },
-  { name: 'Number of Club Members', value: '60' },
-  { name: 'Number of Events', value: '5' },
-]
-
 import CalendarIcon from "@mui/icons-material/EventNoteTwoTone";
 import BookmarkIcon from "@mui/icons-material/BookmarksTwoTone";
 import ClubIcon from "@mui/icons-material/GroupsTwoTone";
 
 import styled from "styled-components";
 
-export default function Example() {
+export default function Home() {
 
-  const { isSignedIn } = useUser()
-  useEffect(() => {
-    if (isSignedIn) {
-      fetch('/api/login/addToSupabase', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      })
-    }
-  }, [isSignedIn])
 
   return (
     <>
