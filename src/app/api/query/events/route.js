@@ -4,12 +4,12 @@ import Database from "../../../database";
 // POST /api/query/events
 export async function POST(req) {
     try {
-      const { clubId, includePastEvents } = await req.json();
+      const { clubIds, includePastEvents } = await req.json();
   
       let query = Database.from("event").select("*");
 
-      if (clubId !== undefined && clubId.length > 0) {
-        query = query.in('clubId', clubId);
+      if (clubIds !== undefined && clubIds.length > 0) {
+        query = query.in('clubId', clubIds);
       }
   
       if (includePastEvents === false) {
