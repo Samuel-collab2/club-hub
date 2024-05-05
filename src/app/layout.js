@@ -1,6 +1,6 @@
 import { Inter } from "next/font/google";
-import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
-import './globals.css';
+import Navbar from "./components/Navbar";
+import StyledComponentsRegistry from "./registry";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,23 +11,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-<ClerkProvider>
-      <html lang="en">
-        <body>
-          <header>
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header>
-          <main>
-            {children}
-          </main>
+    <html lang="en">
+      <StyledComponentsRegistry>
+        <body className={inter.className}>
+          <Navbar />
+          {children}
         </body>
-      </html>
-    </ClerkProvider>
+      </StyledComponentsRegistry>
+    </html>
   );
-
 }
