@@ -8,8 +8,8 @@ export async function POST(req) {
   
       let query = Database.from("event").select("*");
 
-      if (clubId) {
-        query = query.eq("clubId", clubId);
+      if (clubId !== undefined && clubId.length > 0) {
+        query = query.in('clubId', clubId);
       }
   
       if (includePastEvents === false) {
