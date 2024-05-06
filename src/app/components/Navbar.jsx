@@ -1,7 +1,6 @@
 "use client";
 
 import styled from "styled-components";
-import { useRouter } from "next/navigation";
 import LoginIcon from "@mui/icons-material/LoginTwoTone";
 import { ClerkProvider, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
