@@ -1,0 +1,59 @@
+@use "utils" as *;
+@use "global" as *;
+
+.section3 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.flex_col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px 0px;
+  margin: 38px auto 0px;
+  width: 356px;
+  max-width: 85%;
+}
+.flex_row {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 0px 10px;
+  margin: 0px 0px 0px 16px;
+  @include tn {
+    column-gap: 8px;
+    margin: 0px 0px 0px 8px;
+  }
+}
+.subtitle1 {
+  position: relative;
+  font: 700 22px/1.22 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  @include md {
+    align-items: flex-start;
+    font-size: 20px;
+  }
+  @include xxs {
+    font-size: 18px;
+  }
+}
+.subtitle {
+  position: relative;
+  font: 400 22px/1.22 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  @include md {
+    align-items: flex-start;
+    font-size: 20px;
+  }
+  @include xxs {
+    font-size: 18px;
+  }
+}
+.rect2 {
+  position: relative;
+  width: 97px;
+  max-width: 85%;
+  min-height: 3px;
+  background-color: rgb(0, 0, 0);
+}
