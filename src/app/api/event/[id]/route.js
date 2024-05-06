@@ -19,7 +19,7 @@ export async function DELETE(req) {
     const eventId = req.url.slice(req.url.lastIndexOf("/") + 1);
 
     const eventExists = await checkIfEventExists(eventId);
-    
+
     if (!eventExists) {
       return NextResponse.json({ message: `Event with id '${eventId}' does not exist` });
     }
@@ -37,7 +37,7 @@ export async function DELETE(req) {
     });
 
   } catch (error) {
-    console.error(`Error deleting campus: ${error}`);
+    console.error(`Error deleting event: ${error}`);
     return NextResponse.error(error);
   }
 }
