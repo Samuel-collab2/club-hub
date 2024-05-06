@@ -3,7 +3,9 @@ import Database from "../../../database";
 import { currentUser } from "@clerk/nextjs/server";
 
 async function checkIfUserExists(clerkId) {
-    const { data, error } = Database.from("user")
+  
+    const { data, error } = await Database
+        .from("user")
         .select("*")
         .eq("clerkId", clerkId);
 
