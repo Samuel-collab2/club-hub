@@ -13,7 +13,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <StyledComponentsRegistry>
-        <body className={inter.className}>
+        <body
+          className={inter.className}
+          style={{
+            margin: 0,
+          }}
+        >
           <Navbar />
           {children}
         </body>
