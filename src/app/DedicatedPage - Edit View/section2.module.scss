@@ -1,0 +1,174 @@
+@use "utils" as *;
+@use "global" as *;
+
+.section2 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.flex_row {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 0px 10px;
+  margin: 53px auto 0px;
+  width: 91.67%;
+  max-width: 1254.03125px;
+  padding: 0px 8px 0px 0px;
+  @include md {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px 10px;
+  }
+  @include tn {
+    margin: 50px auto 0px;
+  }
+}
+.image6 {
+  position: relative;
+  width: 547px;
+  min-width: 0px;
+  border-radius: 10px 10px 10px 10px;
+  object-fit: cover;
+  @include md {
+    margin-top: unset;
+    margin-bottom: unset;
+    width: 100%;
+    min-width: unset;
+    max-width: 547px;
+  }
+}
+.flex_col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 8px 0px 44px;
+  width: 637px;
+  min-width: 0px;
+  @include md {
+    margin-top: unset;
+    margin-bottom: unset;
+    width: 100%;
+    min-width: unset;
+  }
+}
+.content_box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(217, 217, 217, 0.298);
+  border-radius: 10px 10px 10px 10px;
+  outline: 2px solid rgb(0, 0, 0);
+  outline-offset: -2px;
+  font: 700 51px/1.21 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  @include md {
+    align-items: flex-start;
+    font-size: 46px;
+  }
+  @include xs {
+    margin: 15px 0px 14px 16px;
+  }
+  @include xxs {
+    font-size: 36px;
+  }
+  @include tn {
+    margin: 15px 0px 14px 8px;
+  }
+}
+.hero_title {
+  position: relative;
+  margin: 15px 0px 14px 18px;
+  width: 350px;
+  max-width: 85%;
+  font: 700 51px/1.21 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  @include md {
+    align-items: flex-start;
+    font-size: 46px;
+  }
+  @include xs {
+    margin: 15px 0px 14px 16px;
+  }
+  @include xxs {
+    font-size: 36px;
+  }
+  @include tn {
+    margin: 15px 0px 14px 8px;
+  }
+}
+.flex_row1 {
+  position: relative;
+  display: flex;
+  gap: 0px 15px;
+  margin: 16px 21px 0px;
+  @include xs {
+    margin: 16px 16px 0px;
+  }
+  @include tn {
+    column-gap: 8px;
+    margin: 16px 8px 0px;
+  }
+}
+.image3 {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+}
+.subtitle {
+  position: relative;
+  margin: 0px 0px 1px;
+  font: 400 22px/1.22 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  @include md {
+    align-items: flex-start;
+    font-size: 20px;
+  }
+  @include xxs {
+    font-size: 18px;
+  }
+}
+.flex_row2 {
+  position: relative;
+  display: flex;
+  gap: 0px 15px;
+  margin: 19px 21px 0px;
+  @include xs {
+    margin: 19px 16px 0px;
+  }
+  @include tn {
+    column-gap: 8px;
+    margin: 19px 8px 0px;
+  }
+}
+.subtitle1 {
+  position: relative;
+  margin: 0px 0px 1px;
+  font: 400 22px/1.22 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  letter-spacing: -0.2px;
+  @include md {
+    align-items: flex-start;
+    font-size: 20px;
+  }
+  @include xxs {
+    font-size: 18px;
+  }
+}
+.btn {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin: 47px 0px 0px 13px;
+  width: 157px;
+  max-width: 100%;
+  font: 700 17px/1.23 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 10, 62);
+  text-align: center;
+  background-color: rgb(255, 255, 255);
+  border-radius: 20px 20px 20px 20px;
+  padding: 20px 8px 20px 8px;
+  outline: 3px solid rgb(0, 10, 62);
+  outline-offset: -3px;
+}
