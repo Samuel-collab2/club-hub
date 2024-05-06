@@ -30,7 +30,7 @@ export async function POST(req) {
 
     const firstName = user.firstName;
     const lastName = user.lastName;
-    const email = user.email;
+    const email = user.primaryEmailAddress.emailAddress;
     const clerkId = user.id;
 
     const userExists = await checkIfUserExists(clerkId);
