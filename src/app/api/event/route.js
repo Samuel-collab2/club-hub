@@ -4,6 +4,9 @@ import { NextResponse } from "next/server";
 // POST /api/event
 export async function POST(req) {
     try {
+        // Note: dateTime string has to be in form that is readable to supabase [[supabase expects a time stamp with time zone]]
+        // Ex: "05 October 2011 14:48 UTC"
+        // Ex2: "11 January 1999" // doesn't need clock time or timezone, just Date is mandatory
         const {clubId, name, dateTime, description, location, isVirtual, maxCapacity, banner} = await req.json()
 
         if ((!clubId || !dateTime || !location || !isVirtual)) {
