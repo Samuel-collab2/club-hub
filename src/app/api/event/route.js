@@ -9,31 +9,33 @@ export async function POST(req) {
         // Ex2: "11 January 1999" // doesn't need clock time or timezone, just Date is mandatory
         const {clubId, name, dateTime, description, location, isVirtual, maxCapacity, banner} = await req.json()
 
-        if ((!clubId || !dateTime || !location || !isVirtual)) {
-            return NextResponse.json(
-                { error: "Missing required properties"},
-                { status: 400 }
-                );
+        if (!clubId || !dateTime || !location) {
+          return NextResponse.json(
+            { error: "Missing required properties" },
+            { status: 400 }
+          );
         }
 
-        const {data, error} = await Database.from("event")
-            .insert([{
-                clubId: clubId, 
-                name: name,
-                dateTime: dateTime,
-                description: description,
-                location: location,
-                isVirtual: isVirtual,
-                maxCapacity: maxCapacity,
-                banner: banner
-            }])
-            .select()
+        const { data, error } = await Database.from("event")
+          .insert([
+            {
+              clubId: clubId,
+              name: name,
+              dateTime: dateTime,
+              description: description,
+              location: location,
+              isVirtual: isVirtual ? isVirtual : false,
+              maxCapacity: maxCapacity,
+              banner: banner,
+            },
+          ])
+          .select();
 
         if (error) {
-            throw new Error(error);
-            } else {
-                return NextResponse.json(data);
-            }
+          throw new Error(error);
+        } else {
+        return NextResponse.json(data[0]);
+        }
         
     } catch (error) {
         console.error(`Error found during event creation: ${error}`);
