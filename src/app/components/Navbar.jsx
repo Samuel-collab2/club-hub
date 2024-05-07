@@ -4,12 +4,28 @@ import styled from "styled-components";
 import LoginIcon from "@mui/icons-material/LoginTwoTone";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
+import { useUser } from "@clerk/clerk-react"
+import { useEffect } from "react"
+
 import { useClerk } from "@clerk/clerk-react";
 
 import Logo from "./Logo";
 import SearchBar from "./SearchBar";
 
 export default function Navbar({}) {
+
+  const { isSignedIn } = useUser()
+  useEffect(() => {
+    if (isSignedIn) {
+      fetch('/api/login/addToSupabase', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+    }
+  }, [isSignedIn])
+
   return (
     <NavbarContainer>
       <Logo id="logo" />
