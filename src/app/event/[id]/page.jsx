@@ -1,25 +1,29 @@
 "use client";
 
+import { useState } from "react";
 import styled from "styled-components";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import ScrollableText from "../../components/ScrollableText";
-import AuthWrapper from "../../components/AuthorizedWrapper";
+import AuthWrapper from "../../components/AuthWrapper";
 import UnbookmarkedIcon from "@mui/icons-material/BookmarkBorderTwoTone";
+import BookmarkedIcon from "@mui/icons-material/Bookmark";
 import CalendarIcon from "@mui/icons-material/CalendarMonthTwoTone";
 import Locationicon from "@mui/icons-material/LocationOnTwoTone";
+import VirtualLocationIcon from "@mui/icons-material/VideocamTwoTone";
 import PeopleIcon from "@mui/icons-material/PeopleAltTwoTone";
 
 export default function Event({}) {
   const pathname = usePathname();
   const router = useRouter();
   const id = pathname.replace("/event/", "");
+  const [isItemBookmarked, setIsItemBookmarked] = useState(false);
 
   const eventDetail = {
     id: 1,
     clubId: 4,
     name: "Badminton Fun Games",
-    dateTime: "2021-10-10T10:00:00Z",
+    dateTime: "2025-05-06T06:44:00Z",
     description:
       "Event description Event description Event description Event description Event description Event description Event description Event description Event description Event description Event description Event description Event description Event description Event description Event description Event description Event description Event description Event description Event description Event description Event description Event description",
     location: "123 Moscropt St, Burnaby, BC",
@@ -50,12 +54,31 @@ export default function Event({}) {
   }
 
   return (
-    <div style={{ maxWidth: "100%" }}>
+    <div
+      style={{
+        width: "100vw",
+        alignItems: "center",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <EventContainer>
-        {/* <h1>EventId: {id}</h1> */}
         <EventTitle>
           <Title>
-            {eventDetail.name} <UnbookmarkedIcon fontSize="big" />
+            {eventDetail.name}
+            <AuthWrapper
+              onClick={(e) => {
+                e.preventDefault();
+                console.log("Bookmark event");
+                setIsItemBookmarked(!isItemBookmarked);
+              }}
+            >
+              {isItemBookmarked ? (
+                <BookmarkedIcon fontSize="big" />
+              ) : (
+                <UnbookmarkedIcon fontSize="big" />
+              )}
+            </AuthWrapper>
           </Title>
           <span
             id="club-event-hyperlink"
@@ -86,12 +109,18 @@ export default function Event({}) {
               {getFormattedDate(eventDetail.dateTime)}
             </span>
             <span className="event-information">
-              <Locationicon fontSize="medium" />
+              {eventDetail.isVirtual ? (
+                <VirtualLocationIcon fontSize="medium" />
+              ) : (
+                <Locationicon fontSize="medium" />
+              )}
+
               {eventDetail.location}
             </span>
             <span className="event-information">
               <PeopleIcon fontSize="medium" />
-              10 going
+              10{" "}
+              {new Date(eventDetail.dateTime) > new Date() ? "going" : "went"}
             </span>
           </EventInformation>
         </EventDescription>
@@ -102,12 +131,21 @@ export default function Event({}) {
             {getFormattedDate(eventDetail.dateTime)}
             <br /> <b id="event-name-summary">{eventDetail.name}</b>
           </p>
-          <JoinActionContainer>
-            <JoinButton>
-              {eventDetail.maxCapacity ? "Request to Join" : "Join"}
-            </JoinButton>
-            {eventDetail.maxCapacity && <span>10 spots left</span>}
-          </JoinActionContainer>
+          {new Date(eventDetail.dateTime) > new Date() && (
+            <JoinActionContainer>
+              <AuthWrapper
+                onClick={(e) => {
+                  e.preventDefault();
+                  console.log("Join event");
+                }}
+              >
+                <JoinButton>
+                  {eventDetail.maxCapacity ? "Request to Join" : "Join"}
+                </JoinButton>
+              </AuthWrapper>
+              {eventDetail.maxCapacity && <span>10 spots left</span>}
+            </JoinActionContainer>
+          )}
         </div>
       </EventSummaryContainer>
     </div>
@@ -173,14 +211,20 @@ const EventInformation = styled.div`
 const EventSummaryContainer = styled.div`
   background-color: #fcfcfc;
   border: 1px solid #e0e0e0;
-  padding: 40px;
+  padding: 40px 0px;
   box-shadow: 0 -3px 10px 2px rgba(0, 0, 0, 0.005);
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
 
   #event-summary-content {
     align-items: center;
     justify-content: space-between;
     display: flex;
     flex-direction: row;
+    width: 100%;
     max-width: 1024px;
     gap: 10px;
   }

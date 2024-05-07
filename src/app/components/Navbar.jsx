@@ -2,7 +2,7 @@
 
 import styled from "styled-components";
 import LoginIcon from "@mui/icons-material/LoginTwoTone";
-import { ClerkProvider, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 import { useClerk } from "@clerk/clerk-react";
 
@@ -11,18 +11,16 @@ import SearchBar from "./SearchBar";
 
 export default function Navbar({}) {
   return (
-    <ClerkProvider>
-      <NavbarContainer>
-        <Logo id="logo" />
-        <SearchBar id="search-bar" />
-        <SignedOut>
-          <LoginBtn id="login-btn" />
-        </SignedOut>
-        <SignedIn>
-          <UserButton userProfileMode="modal" />
-        </SignedIn>
-      </NavbarContainer>
-    </ClerkProvider>
+    <NavbarContainer>
+      <Logo id="logo" />
+      <SearchBar id="search-bar" />
+      <SignedOut>
+        <LoginBtn id="login-btn" />
+      </SignedOut>
+      <SignedIn>
+        <UserButton userProfileMode="modal" />
+      </SignedIn>
+    </NavbarContainer>
   );
 }
 
