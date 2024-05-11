@@ -41,3 +41,23 @@ export async function DELETE(req) {
     return NextResponse.error(error);
   }
 }
+
+// GET /api/event/[id]
+export async function GET(req) {
+  try {
+    const eventId = req.url.slice(req.url.lastIndexOf("/") + 1);
+    let { data, error } = await Database.from("event")
+      .select("*")
+      .eq("id", eventId);
+
+    if (error) {
+      throw new Error(error);
+    } else {
+      return NextResponse.json(data[0]);
+    }
+
+  } catch (error) {
+    console.error(`Error getting event: ${error}`);
+    return NextResponse.error(error);
+  }
+}

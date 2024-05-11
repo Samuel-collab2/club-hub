@@ -15,7 +15,12 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <StyledComponentsRegistry>
         <ClerkProvider>
-          <body className={inter.className}>
+          <body
+            className={inter.className}
+            style={{
+              margin: 0,
+            }}
+          >
             <Navbar />
             {children}
           </body>
