@@ -1,9 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    compiler: {
-        styledComponents: true,
-      }
-}
+  compiler: {
+    styledComponents: true,
+  },
+  images: {
+    domains: ["images.unsplash.com"],
+  },
+};
 ;
 
 export default nextConfig;

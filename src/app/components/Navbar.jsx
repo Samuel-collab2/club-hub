@@ -1,7 +1,6 @@
 "use client";
 
 import styled from "styled-components";
-import { useRouter } from "next/navigation";
 import LoginIcon from "@mui/icons-material/LoginTwoTone";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
@@ -14,30 +13,31 @@ import Logo from "./Logo";
 import SearchBar from "./SearchBar";
 
 export default function Navbar({}) {
-
-  const { isSignedIn } = useUser()
+  const { isSignedIn } = useUser();
   useEffect(() => {
     if (isSignedIn) {
-      fetch('/api/login/addToSupabase', {
-        method: 'POST',
+      fetch("/api/login/addToSupabase", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-        }
-      })
+          "Content-Type": "application/json",
+        },
+      });
     }
-  }, [isSignedIn])
+  }, [isSignedIn]);
 
   return (
-      <NavbarContainer>
-        <Logo id="logo" />
-        <SearchBar id="search-bar" />
+    <NavbarContainer>
+      <Logo id="logo" />
+      <SearchBar id="search-bar" />
+      <span id="user-section">
         <SignedOut>
           <LoginBtn id="login-btn" />
         </SignedOut>
         <SignedIn>
-          <UserButton userProfileMode="modal" />
+          <UserButton userProfileMode="modal" style={{ right: 0 }} />
         </SignedIn>
-      </NavbarContainer>
+      </span>
+    </NavbarContainer>
   );
 }
 
@@ -59,7 +59,7 @@ const NavbarContainer = styled.div`
       justify-self: center;
     }
 
-    #login-btn {
+    #user-section {
       justify-self: end;
     }
   }
