@@ -70,7 +70,7 @@ export async function POST(req) {
         return NextResponse.json(
             { message: "Success!" },
             );
-    // If desired event DOES NOT have room regarding it's max capacity limit ...
+    // If desired event DOES NOT have room regarding it's max capacity limit ... 
     } else {
         return NextResponse.json(
             { message: "Event Maxcapacity is reached" },
