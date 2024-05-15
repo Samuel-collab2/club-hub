@@ -3,7 +3,9 @@ import Database from "../../../database";
 import { currentUser } from "@clerk/nextjs/server";
 
 async function checkIfUserExists(clerkId) {
-    const { data, error } = Database.from("user")
+  
+    const { data, error } = await Database
+        .from("user")
         .select("*")
         .eq("clerkId", clerkId);
 
@@ -28,7 +30,7 @@ export async function POST(req) {
 
     const firstName = user.firstName;
     const lastName = user.lastName;
-    const email = user.email;
+    const email = user.primaryEmailAddress.emailAddress;
     const clerkId = user.id;
 
     const userExists = await checkIfUserExists(clerkId);
