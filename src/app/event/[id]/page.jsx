@@ -20,6 +20,7 @@ export default function Event({}) {
   const id = pathname.replace("/event/", "");
   const [isItemBookmarked, setIsItemBookmarked] = useState(false);
   const [eventDetail, setEventDetail] = useState({});
+  const [clubDetail, setClubDetail] = useState({});
 
   useEffect(() => {
     fetch("/api/event/" + id)
@@ -28,12 +29,20 @@ export default function Event({}) {
         setEventDetail(data);
       });
   }, []);
-  const clubDetail = {
-    name: "Badminton Club",
-  };
+
+  useEffect(() => {
+    if (eventDetail.clubId) {
+      fetch("/api/club/" + eventDetail.clubId)
+        .then((res) => res.json())
+        .then((data) => {
+          setClubDetail(data);
+        });
+    }
+  }, [eventDetail]);
 
   function getFormattedDate(dateString) {
     const date = new Date(dateString);
+    console.log(date);
 
     const options = {
       month: "long",
@@ -44,7 +53,7 @@ export default function Event({}) {
       hour12: true,
     };
 
-    const formattedDate = date.toLocaleDateString("en-US", options);
+    const formattedDate = date.toUTCString("en-US", options);
 
     return formattedDate;
   }
