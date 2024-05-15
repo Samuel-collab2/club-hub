@@ -10,7 +10,6 @@ export default function UploadImage({ ...props }) {
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    console.log(file);
 
     if (!file) {
       return;
@@ -24,12 +23,24 @@ export default function UploadImage({ ...props }) {
   };
 
   return (
-    <Container {...props}>
-      <h1>
-        <UploadImageIcon id="upload-image-icon" />
-      </h1>
+    <Container {...props} className={previewImage ? "disabled-dashed" : null}>
+      {!previewImage && (
+        <h1>
+          <UploadImageIcon id="upload-image-icon" />
+        </h1>
+      )}
+
+      {previewImage && (
+        <Image
+          src={previewImage}
+          alt="Preview Image"
+          width={300}
+          height={300}
+          style={{ objectFit: "cover" }}
+        />
+      )}
       <label for="file-upload" class="custom-file-upload">
-        Upload Image
+        Upload {previewImage && "a different"} Image
       </label>
       <input
         id="file-upload"
@@ -37,14 +48,6 @@ export default function UploadImage({ ...props }) {
         accept="image/png, image/jpeg"
         onChange={handleImageChange}
       />
-      {previewImage && (
-        <Image
-          src={previewImage}
-          alt="Preview Image"
-          width={300}
-          height={300}
-        />
-      )}
     </Container>
   );
 }
@@ -56,6 +59,10 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  &.disabled-dashed {
+    border: none;
+  }
 
   #upload-image-icon {
     transform: scale(3);
@@ -73,6 +80,7 @@ const Container = styled.div`
     gap: 5px;
     cursor: pointer;
     max-width: 200px;
+    margin-top: 10px;
   }
 
   input[type="file"] {
