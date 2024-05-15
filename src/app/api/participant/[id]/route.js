@@ -83,3 +83,33 @@ export async function POST(req) {
     return NextResponse.error(error);
   }
 }
+
+// GET /api/participants/[id]
+export async function GET() {
+  try {
+    let { data, error } = await Database.from("eventparticipants")
+      .select("*");
+
+    if (error) {
+      throw new Error(error);
+    }
+
+    let resData = []
+    for (let i = 0; i < data.length; i++) {
+      const userData = await Database.from("user")
+        .select()
+        .eq("id", parseInt(data[i].userId));
+      
+      resData.push({
+        "firstName" : userData.data[0].firstName,
+        "lastName" : userData.data[0].lastName,
+        "email" : userData.data[0].email,
+      })
+    }
+
+    return NextResponse.json(resData);
+  } catch (error) {
+    console.error(`Error fetching list of event participants: ${error}`);
+    return NextResponse.error(error);
+  }
+}
