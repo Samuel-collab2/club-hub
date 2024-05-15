@@ -38,7 +38,7 @@ function countKeywords(string, keyword) {
     if (!string || !keyword) {
         return 0;
     }
-    return string.split(keyword).length - 1;
+    return string.toLowerCase().split(keyword.toLowerCase()).length - 1;
 }
 
 function relevanceScore(dataset, keyword, sort) {
