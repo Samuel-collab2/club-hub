@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import styled from "styled-components";
 import UploadImageIcon from "@mui/icons-material/CenterFocusStrong";
 import Image from "next/image";
 
-export default function UploadImage({ ...props }) {
-  const [previewImage, setPreviewImage] = useState(null);
-
+export default function UploadImage({
+  previewImage,
+  setPreviewImage,
+  ...props
+}) {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
 
