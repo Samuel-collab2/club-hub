@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import Database from "../../database";
 
-async function query(keyword, sortBy, sort, table){
+async function query(keyword, sort, table){
     let query = Database.from(table).select("*");
 
     if (keyword !== null) {
@@ -9,19 +9,13 @@ async function query(keyword, sortBy, sort, table){
     }
 
     query = query.select("name, description")
-    let ascending = true;
-    if (sort === "asc") {
-        ascending = true;
-    } else if (sort === "desc"){
-        ascending = false;
-    }
 
-    if (sortBy === "date") {
-        query = query.order("created_at", { ascending });
+    // if (sortBy === "date") {
+    //     query = query.order("created_at", { ascending });
 
-        if (table === "event")
-            query = query.order("dateTime", { ascending });
-    } 
+    //     if (table === "event")
+    //         query = query.order("dateTime", { ascending });
+    // } 
 
     const { data, error } = await query;
 
@@ -41,7 +35,7 @@ function countKeywords(string, keyword) {
     return string.toLowerCase().split(keyword.toLowerCase()).length - 1;
 }
 
-function relevanceScore(dataset, keyword, sort) {
+function relevanceScore(dataset, keyword) {
     dataset.forEach((data) => {
         data.relevance_score = 0;
 
@@ -49,42 +43,41 @@ function relevanceScore(dataset, keyword, sort) {
         const descriptionOccurrences = countKeywords(data.description, keyword);
         data.relevance_score = nameOccurrences + descriptionOccurrences;
     });
-
-    dataset.sort((a, b) => {
-        if (sort === "asc") {
-            return a.relevance_score - b.relevance_score;
-        } else {
-            return b.relevance_score - a.relevance_score;
-        }
-    });
 }
 
 // POST /api/query
 export async function POST(req) {
     try {
-        const { keyword, pageSize, page, sortBy, sort } = await req.json();
+        const { keyword, pageSize, page, sort } = await req.json();
 
-        const clubData = await query(keyword, sortBy, sort, "club");
-        const eventData = await query(keyword, sortBy, sort, "event");
+        const clubData = await query(keyword, sort, "club");
+        const eventData = await query(keyword, sort, "event");
 
-        // Calculate relevance score for each club and event
-        if (sortBy === "relevance") {
-            relevanceScore(clubData, keyword, sort);
-            relevanceScore(eventData, keyword, sort);
-        }
+        relevanceScore(clubData, keyword);
+        relevanceScore(eventData, keyword);
+        
+        // Combine club and event data
+        const combinedData = clubData.concat(eventData);
 
-        // Return results based on page and pageSize
-        const clubDataPage = clubData.slice((page - 1) * pageSize, page * pageSize);
-        const eventDataPage = eventData.slice((page - 1) * pageSize, page * pageSize);
+        // Sort data based on relevance score
+        combinedData.sort((a, b) => {
+            if (sort === "asc") {
+                return a.relevance_score - b.relevance_score;
+            } else {
+                return b.relevance_score - a.relevance_score;
+            }
+        });
+
+        const dataPage = combinedData.slice((page - 1) * pageSize, page * pageSize);
        
-        if (!clubData || !eventData) {
+        if (!dataPage) {
             return NextResponse.json({ error: "No data found" }, { status: 404 });
         }
 
-        return NextResponse.json({ clubData: clubDataPage, eventData: eventDataPage });
+        return NextResponse.json({ data: dataPage });
 
     } catch (error) {
-        console.error(`Error querying clubs: ${error.message}`);
+        console.error(`Error querying data: ${error.message.toString()}`);
         return NextResponse.error(error);
     }
 }
