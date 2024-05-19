@@ -70,7 +70,6 @@ export async function GET(req) {
     if (error) {
       throw new Error(new Error("Error saving event"));
     }
-    console.log(data);
     return NextResponse.json({ isSaved: data.length > 0 });
   } catch (error) {
     console.error(`Error saving event: ${error}`);
