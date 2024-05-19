@@ -72,7 +72,7 @@ export async function GET(req) {
     }
     return NextResponse.json({ isSaved: data.length > 0 });
   } catch (error) {
-    console.error(`Error saving event: ${error}`);
+    console.error(`Error checking event: ${error}`);
     return NextResponse.error(error);
   }
 }
