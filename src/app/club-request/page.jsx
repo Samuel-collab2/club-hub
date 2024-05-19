@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import UploadImage from "../components/UploadImage";
 import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 import PublicPrivateIcon from "@mui/icons-material/VpnLockTwoTone";
 import SchoolIcon from "@mui/icons-material/CorporateFareTwoTone";
@@ -15,23 +18,29 @@ export default function CreateEventPage() {
   const defaultEndDate = new Date();
   defaultEndDate.setDate(defaultEndDate.getDate() + 7);
 
-  const [startDate, setDate] = useState(new Date());
   const [clubName, setClubName] = useState("");
   const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
-  const [maxParticipants, setMaxParticipants] = useState(0);
-  const [noParticipantLimit, setNoParticipantLimit] = useState(false);
-  const [isVirtual, setIsVirtual] = useState(false);
-  const [campuses, setCampuses] = useState([]);
+  const [campusOption, setCampusOption] = useState([]);
+  const [campus, setCampus] = useState(null);
+  const [isPrivate, setIsPrivate] = useState(false);
+  const [clubRoom, setClubRoom] = useState("");
+  const [description, setDescription] = useState("");
+  const [banner, setBanner] = useState(null);
 
   const router = useRouter();
 
   useEffect(() => {
-    fetch("/api/campus")
-      .then((res) => res.json())
-      .then((data) => {
-        setCampuses(data);
-      });
+    let campuses = JSON.parse(localStorage.getItem("campuses"));
+    if (!campuses) {
+      fetch("/api/campus")
+        .then((res) => res.json())
+        .then((data) => {
+          campuses = data;
+          localStorage.setItem("campuses", JSON.stringify(data));
+        });
+    }
+    setCampusOption(campuses);
+    setCampus(campuses[0].id);
   }, []);
 
   return (
@@ -44,12 +53,23 @@ export default function CreateEventPage() {
       }}
     >
       <Container>
-        <UploadImage style={{ height: "300px" }} />
+        <UploadImage
+          style={{ height: "300px" }}
+          previewImage={banner}
+          setPreviewImage={setBanner}
+        />
         <ClubInfoContainer>
           <TextField
             label=""
             placeholder="Club Name"
             variant="outlined"
+            value={clubName}
+            onChange={(e) => {
+              {
+                e.preventDefault();
+                setClubName(e.target.value);
+              }
+            }}
             sx={{
               "& .MuiInputBase-input": {
                 fontSize: "30px",
@@ -59,54 +79,68 @@ export default function CreateEventPage() {
           <ClubInfoInputContainer>
             <div className="mini-info-input-form">
               <SchoolIcon />
-              <input
-                type="datetime-local"
-                id="date-picker-input"
-                value={startDate}
-                onChange={(e) => {
-                  e.preventDefault();
-                  setDate(e.target.value);
-                }}
-              />
+              <FormControl>
+                <Select
+                  id="campus-select"
+                  value={campus}
+                  label=""
+                  onChange={(e) => {
+                    setCampus(e.target.value);
+                  }}
+                  size="small"
+                >
+                  {campusOption.map((campus) => {
+                    return (
+                      <MenuItem key={campus.id} value={campus.id}>
+                        {campus.name}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
             </div>
             <div className="mini-info-input-form">
               <PublicPrivateIcon />
-              <TextField
-                label=""
-                placeholder={isVirtual ? "Event Link" : "Location"}
-                variant="outlined"
-                size="small"
-              />
+              <FormControl>
+                <Select
+                  id="public-private-select"
+                  value={isPrivate}
+                  label=""
+                  onChange={(e) => {
+                    setIsPrivate(e.target.value);
+                  }}
+                  size="small"
+                >
+                  <MenuItem value={false}>Public</MenuItem>
+                  <MenuItem value={true}>Private</MenuItem>
+                </Select>
+              </FormControl>
             </div>
             <div className="mini-info-input-form">
               <EmailIcon />
               <TextField
-                label=""
-                placeholder="Max Particiapants"
+                placeholder="Email"
                 variant="outlined"
+                id="email-input"
                 size="small"
-                type="number"
-                value={maxParticipants}
-                disabled={noParticipantLimit}
+                value={email}
                 onChange={(e) => {
                   e.preventDefault();
-                  setMaxParticipants(e.target.value);
+                  setEmail(e.target.value);
                 }}
               />
             </div>
             <div className="mini-info-input-form">
               <DoorIcon />
               <TextField
-                label=""
-                placeholder="Max Particiapants"
+                placeholder="Club Room"
                 variant="outlined"
+                id="club-room-input"
                 size="small"
-                type="number"
-                value={maxParticipants}
-                disabled={noParticipantLimit}
+                value={clubRoom}
                 onChange={(e) => {
                   e.preventDefault();
-                  setMaxParticipants(e.target.value);
+                  setClubRoom(e.target.value);
                 }}
               />
             </div>
@@ -119,11 +153,28 @@ export default function CreateEventPage() {
             multiline
             maxRows={10}
             minRows={6}
+            value={description}
+            onChange={(e) => {
+              e.preventDefault();
+              setDescription(e.target.value);
+            }}
           />
           <SubmitButton
             className="create-club-submit-btn"
             type="submit"
-            disabled={true}
+            disabled={false}
+            onClick={(e) => {
+              e.preventDefault();
+              console.log(
+                clubName,
+                campus,
+                isPrivate,
+                email,
+                clubRoom,
+                description,
+                banner
+              );
+            }}
           >
             Request
           </SubmitButton>
