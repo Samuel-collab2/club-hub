@@ -1,10 +1,11 @@
 import { NextResponse} from "next/server";
 import Database from "../../../database";
 
-// POST /api/participate/[id]
+// POST /api/participate/[event id]
 export async function POST(req) {
   try {
-    const {eventId, userId} = await req.json()
+    const {userId} = await req.json()
+    const eventId = req.url.slice(req.url.lastIndexOf("/") + 1);
 
     if (!eventId || !userId) {
         return NextResponse.json(
