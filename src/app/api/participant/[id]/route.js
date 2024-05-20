@@ -85,11 +85,37 @@ export async function POST(req) {
   }
 }
 
-// GET /api/participants/[id]
-export async function GET() {
+// GET /api/participants/[event id]
+// fetch list of participants for event ID.
+// Return: 
+// [
+//   {
+//     firstName: string,
+//     lastName: string,
+//     email: string
+//   },
+//   {
+//     firstName: string,
+//     lastName: string,
+//     email: string
+//   },
+//   ... repeat for all participants
+// ]
+// NOTE: Will return empty array if no participants for event, or if event id doesn't exist
+export async function GET(req) {
+  const eventId = req.url.slice(req.url.lastIndexOf("/") + 1);
+
+  if (!eventId) {
+    return NextResponse.json(
+      { error: "Missing Event Id from URL path" },
+      { status: 400 }
+    );
+  }
+
   try {
     let { data, error } = await Database.from("eventparticipants")
-      .select("*");
+      .select("*")
+      .eq("eventId", eventId)
 
     if (error) {
       throw new Error(error);
