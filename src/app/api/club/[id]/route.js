@@ -12,7 +12,7 @@ export async function GET(req) {
         else if (!clubId) {
             return NextResponse.json({ error: "Club id is required." }, { status: 404 }); 
         }
-      return NextResponse.json(club);
+      return NextResponse.json(club[0]);
     } catch (error) {
       console.error(`Error getting club: ${error} for club id: ${clubId}`);
       return NextResponse.error(error);

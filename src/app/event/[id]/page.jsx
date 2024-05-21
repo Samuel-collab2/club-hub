@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
+import { useUser } from "@clerk/clerk-react";
 import ScrollableText from "../../components/ScrollableText";
 import AuthWrapper from "../../components/AuthWrapper";
 import UnbookmarkedIcon from "@mui/icons-material/BookmarkBorderTwoTone";
@@ -17,9 +18,11 @@ import PencilIcon from "@mui/icons-material/CreateTwoTone";
 export default function Event({}) {
   const pathname = usePathname();
   const router = useRouter();
+  const { isSignedIn } = useUser();
   const id = pathname.replace("/event/", "");
   const [isItemBookmarked, setIsItemBookmarked] = useState(false);
   const [eventDetail, setEventDetail] = useState({});
+  const [clubDetail, setClubDetail] = useState({});
 
   useEffect(() => {
     fetch("/api/event/" + id)
@@ -27,10 +30,25 @@ export default function Event({}) {
       .then((data) => {
         setEventDetail(data);
       });
+
+    if (isSignedIn) {
+      fetch("/api/event/" + id + "/save")
+        .then((res) => res.json())
+        .then((data) => {
+          setIsItemBookmarked(data.isSaved);
+        });
+    }
   }, []);
-  const clubDetail = {
-    name: "Badminton Club",
-  };
+
+  useEffect(() => {
+    if (eventDetail.clubId) {
+      fetch("/api/club/" + eventDetail.clubId)
+        .then((res) => res.json())
+        .then((data) => {
+          setClubDetail(data);
+        });
+    }
+  }, [eventDetail]);
 
   function getFormattedDate(dateString) {
     const date = new Date(dateString);
@@ -44,7 +62,7 @@ export default function Event({}) {
       hour12: true,
     };
 
-    const formattedDate = date.toLocaleDateString("en-US", options);
+    const formattedDate = date.toUTCString("en-US", options);
 
     return formattedDate;
   }
@@ -66,8 +84,11 @@ export default function Event({}) {
               <AuthWrapper
                 onClick={(e) => {
                   e.preventDefault();
-                  console.log("Bookmark event");
-                  setIsItemBookmarked(!isItemBookmarked);
+                  fetch("/api/event/" + id + "/save", {
+                    method: isItemBookmarked ? "DELETE" : "POST",
+                  }).then((data) => {
+                    setIsItemBookmarked(!isItemBookmarked);
+                  });
                 }}
               >
                 {isItemBookmarked ? (
