@@ -85,6 +85,84 @@ export async function POST(req) {
   }
 }
 
+// DELETE /api/participate/[event id]
+export async function DELETE(req) {
+  try {
+    const {userId} = await req.json()
+    const eventId = req.url.slice(req.url.lastIndexOf("/") + 1);
+
+    if (!eventId || !userId) {
+        return NextResponse.json(
+          { error: "Missing required properties" },
+          { status: 400 }
+        );
+      }
+  
+
+    // Check if passed in event and eventparticipant exists
+    const { data, error } = await Database.from("event")
+      .select()
+      .eq('id', eventId)
+
+    if (error) {
+      throw new Error(error);
+    } else if (Object.keys(data).length === 0) {
+      return NextResponse.json(
+        { error: "passed in event id not found in database" },
+        { status: 400 }
+      );
+    }
+
+    const eventParticipantFetch = await Database.from("eventparticipants")
+      .select()
+      .eq('userId', userId)
+      .eq('eventId', eventId)
+
+    if (eventParticipantFetch.error) {
+      throw new Error(eventParticipantFetch.error);
+    } else if (Object.keys(eventParticipantFetch.data).length === 0) {
+      return NextResponse.json(
+        { error: "eventparticipant with corresponding passed userId + eventId not found in DB" },
+        { status: 400 }
+      );
+    } 
+
+
+    // lines 126 - 148 are for deleting event participant, and decrementing participant count from Event Table
+    let eventData = data[0]
+    let participantsCount = eventData.participantsCount
+    // If participant list is already 0 ... something is wrong with db ...
+    if(participantsCount === 0) {
+
+      return NextResponse.json(
+        { error: "Event participant list is already 0" },
+        { status: 400 }
+      );
+
+    } else {
+
+        await Database.from("event")
+            .update({'participantsCount': participantsCount - 1})
+            .eq("id", parseInt(eventId));
+
+        await Database.from("eventparticipants")
+            .delete()
+            .eq('userId', userId)
+            .eq('eventId', eventId)
+
+        return NextResponse.json(
+            { message: "Success, eventparticipant removed"},
+          );
+          
+    }
+
+
+  } catch (error) {
+    console.error(`Error unjoining/deleting eventparticipant: ${error}`);
+    return NextResponse.error(error);
+  }
+}
+
 // GET /api/participants/[event id]
 // fetch list of participants for event ID.
 // Return: 
