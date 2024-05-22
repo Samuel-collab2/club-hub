@@ -1,0 +1,70 @@
+@use "utils" as *;
+@use "global" as *;
+
+.infoSection {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.flexColumn1 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3px 0px;
+  margin: 38px auto 0px;
+  width: 340px;
+  max-width: 85%;
+}
+.flexRow5 {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 0px 10px;
+  @include tn {
+    column-gap: 8px;
+  }
+}
+.aboutSubtitle {
+  position: relative;
+  font: 400 22px/1.22 "Inter", Helvetica, Arial, serif;
+  color: rgba(0, 0, 0, 0.247);
+  @include md {
+    align-items: flex-start;
+    font-size: 20px;
+  }
+  @include xxs {
+    font-size: 18px;
+  }
+}
+.eventsSubtitle {
+  position: relative;
+  font: 700 22px/1.22 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  @include md {
+    align-items: flex-start;
+    font-size: 20px;
+  }
+  @include xxs {
+    font-size: 18px;
+  }
+}
+.membersSubtitle {
+  position: relative;
+  font: 400 22px/1.22 "Inter", Helvetica, Arial, serif;
+  color: rgba(0, 0, 0, 0.247);
+  @include md {
+    align-items: flex-start;
+    font-size: 20px;
+  }
+  @include xxs {
+    font-size: 18px;
+  }
+}
+.iconImage {
+  position: relative;
+  margin: 0px 0px 0px 35.29%;
+  width: 72px;
+  max-width: 85%;
+  height: 3px;
+  object-fit: cover;
+}

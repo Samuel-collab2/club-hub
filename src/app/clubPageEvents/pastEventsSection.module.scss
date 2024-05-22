@@ -1,0 +1,143 @@
+@use "utils" as *;
+@use "global" as *;
+
+.pastEventsSection {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.flexColumn6 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 39px 0px;
+  margin: 50px 0px 0px 5.77%;
+  width: 241px;
+  max-width: 85%;
+}
+.flexRow6 {
+  position: relative;
+  display: flex;
+  gap: 0px 13px;
+  width: 100%;
+  @include tn {
+    column-gap: 8px;
+  }
+}
+.eventImage {
+  position: relative;
+  margin: 6px 0px 0px;
+  width: 32px;
+  height: 29px;
+  object-fit: cover;
+}
+.title {
+  position: relative;
+  font: 700 29px/1.2 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  @include md {
+    align-items: flex-start;
+    font-size: 26px;
+  }
+  @include xxs {
+    font-size: 24px;
+  }
+}
+.flexColumn7 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 9px 0px;
+  width: 97.93%;
+}
+.coverImage1 {
+  position: relative;
+  width: 100%;
+  border-radius: 10px 10px 10px 10px;
+  object-fit: cover;
+}
+.flexColumn5 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0px 0px 0px 6px;
+  width: 160px;
+  max-width: 85%;
+}
+.highlight31 {
+  position: relative;
+  margin: 0px 0px 0px 3px;
+  font: 700 18px/1.22 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  @include md {
+    align-items: flex-start;
+    font-size: 16px;
+  }
+}
+.flexRow9 {
+  position: relative;
+  display: flex;
+  gap: 0px 7px;
+  margin: 26px 3px 0px;
+}
+.eventImage1 {
+  position: relative;
+  width: 17px;
+  height: 17px;
+  object-fit: cover;
+}
+.eventInfo6 {
+  position: relative;
+  margin: 2px 0px 0px;
+  font: 400 12px/1.25 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  letter-spacing: -0.31px;
+}
+.flexRow8 {
+  position: relative;
+  display: flex;
+  gap: 0px 19px;
+  margin: 11px 0px 0px;
+  @include xs {
+    column-gap: 16px;
+  }
+  @include tn {
+    column-gap: 8px;
+  }
+}
+.flexRow10 {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0px 3px;
+  margin: 0px 0px 2px;
+  width: 76px;
+  min-width: 0px;
+}
+.eventImage2 {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+}
+.goingInfo7 {
+  position: relative;
+  font: 400 12px/1.25 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  letter-spacing: -0.2px;
+}
+.flexRow11 {
+  position: relative;
+  display: flex;
+  gap: 0px 3px;
+  margin: 2px 0px 0px;
+  width: 57px;
+  min-width: 0px;
+}
+.freeInfo8 {
+  position: relative;
+  margin: 3px 0px 6px;
+  font: 400 12px/1.25 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+}

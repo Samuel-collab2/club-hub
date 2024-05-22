@@ -1,0 +1,365 @@
+@use "utils" as *;
+@use "global" as *;
+
+.upcomingEventsSection {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.flexColumn2 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px 0px;
+  margin: 33px 0px 0px 5.77%;
+  width: 536px;
+  max-width: 85%;
+}
+.flexRow6 {
+  position: relative;
+  display: flex;
+  gap: 0px 13px;
+  width: 100%;
+  @include tn {
+    column-gap: 8px;
+  }
+}
+.eventImage {
+  position: relative;
+  margin: 0px 0px 3px;
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+}
+.title {
+  position: relative;
+  font: 700 29px/1.2 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  @include md {
+    align-items: flex-start;
+    font-size: 26px;
+  }
+  @include xxs {
+    font-size: 24px;
+  }
+}
+.flexRow7 {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 0px 10px;
+  width: 98.13%;
+  @include xxs {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px 10px;
+  }
+}
+.contentBox4 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 2px 0px 0px;
+  width: 236px;
+  min-width: 0px;
+  min-height: 253px;
+  @include xxs {
+    margin-top: unset;
+    margin-bottom: unset;
+    width: 100%;
+    min-width: unset;
+  }
+}
+.flexColumn3 {
+  position: absolute;
+  top: 151px;
+  right: 78px;
+  bottom: 0px;
+  left: 6px;
+  display: flex;
+  flex-direction: column;
+  width: 152px;
+  height: 102px;
+}
+.contentBox3 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0px 18px 0px 3px;
+  min-height: 22px;
+  @include xs {
+    margin: 0px 16px 0px 3px;
+  }
+  @include tn {
+    margin: 0px 8px 0px 3px;
+  }
+}
+.highlight3 {
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  width: 131px;
+  height: 22px;
+  font: 700 18px/1.22 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  letter-spacing: -0.5px;
+  transform: translate(-50%, 0);
+  @include md {
+    align-items: flex-start;
+    font-size: 16px;
+  }
+}
+.contentBox {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 26px 19px 0px 3px;
+  min-height: 17px;
+  @include xs {
+    margin: 26px 16px 0px 3px;
+  }
+  @include tn {
+    margin: 26px 8px 0px 3px;
+  }
+}
+.eventImage1 {
+  position: absolute;
+  top: 50%;
+  right: 113px;
+  left: 0px;
+  width: 17px;
+  height: 17px;
+  transform: translate(0, -50%);
+}
+.eventInfo {
+  position: absolute;
+  top: 2px;
+  right: 0px;
+  bottom: 0px;
+  left: 24px;
+  width: 106px;
+  height: 15px;
+  font: 400 12px/1.25 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  letter-spacing: -0.31px;
+}
+.eventImage2 {
+  position: absolute;
+  top: 50%;
+  left: 0px;
+  width: 17px;
+  height: 17px;
+  transform: translate(0, -50%);
+}
+.eventInfo1 {
+  position: absolute;
+  top: 2px;
+  left: 24px;
+  width: 106px;
+  height: 15px;
+  font: 400 12px/1.25 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  letter-spacing: -0.31px;
+}
+.flexRow8 {
+  position: relative;
+  display: flex;
+  gap: 0px 19px;
+  margin: 11px 0px 0px;
+  @include xs {
+    column-gap: 16px;
+  }
+  @include tn {
+    column-gap: 8px;
+  }
+}
+.contentBox1 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0px 0px 2px;
+  width: 76px;
+  min-width: 0px;
+  min-height: 24px;
+}
+.goingInfo {
+  position: absolute;
+  top: 50%;
+  right: 0px;
+  left: 27px;
+  width: 49px;
+  height: 15px;
+  font: 400 12px/1.25 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  letter-spacing: -0.2px;
+  transform: translate(0, -50%);
+}
+.eventImage3 {
+  position: absolute;
+  top: 50%;
+  right: 52px;
+  left: 0px;
+  width: 24px;
+  height: 24px;
+  transform: translate(0, -50%);
+}
+.goingInfo1 {
+  position: absolute;
+  top: 50%;
+  left: 27px;
+  width: 49px;
+  height: 15px;
+  font: 400 12px/1.25 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  letter-spacing: -0.2px;
+  transform: translate(0, -50%);
+}
+.eventImage4 {
+  position: absolute;
+  top: 50%;
+  left: 0px;
+  width: 24px;
+  height: 24px;
+  transform: translate(0, -50%);
+}
+.contentBox11 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 2px 0px 0px;
+  width: 57px;
+  min-width: 0px;
+  min-height: 24px;
+}
+.freeInfo {
+  position: absolute;
+  top: 3px;
+  right: 0px;
+  bottom: 6px;
+  left: 27px;
+  width: 30px;
+  height: 15px;
+  font: 400 12px/1.25 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+}
+.eventImage5 {
+  position: absolute;
+  top: 50%;
+  right: 33px;
+  left: 0px;
+  width: 24px;
+  height: 24px;
+  transform: translate(0, -50%);
+}
+.freeInfo1 {
+  position: absolute;
+  top: 3px;
+  left: 27px;
+  width: 30px;
+  height: 15px;
+  font: 400 12px/1.25 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+}
+.coverImage {
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  width: 236px;
+  height: 142px;
+  border-radius: 10px 10px 10px 10px;
+  transform: translate(-50%, 0);
+}
+.flexColumn4 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 9px 0px;
+  margin: 0px 0px 2px;
+  width: 236px;
+  min-width: 0px;
+  @include xxs {
+    margin-top: unset;
+    margin-bottom: unset;
+    width: 100%;
+    min-width: unset;
+  }
+}
+.coverImage1 {
+  position: relative;
+  width: 100%;
+  border-radius: 10px 10px 10px 10px;
+  object-fit: cover;
+}
+.flexColumn5 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0px 0px 0px 6px;
+  width: 160px;
+  max-width: 85%;
+}
+.highlight31 {
+  position: relative;
+  margin: 0px 0px 0px 3px;
+  font: 700 18px/1.22 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  @include md {
+    align-items: flex-start;
+    font-size: 16px;
+  }
+}
+.flexRow9 {
+  position: relative;
+  display: flex;
+  gap: 0px 7px;
+  margin: 26px 3px 0px;
+}
+.eventImage6 {
+  position: relative;
+  width: 17px;
+  height: 17px;
+  object-fit: cover;
+}
+.eventInfo6 {
+  position: relative;
+  margin: 2px 0px 0px;
+  font: 400 12px/1.25 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  letter-spacing: -0.31px;
+}
+.flexRow10 {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0px 3px;
+  margin: 0px 0px 2px;
+  width: 76px;
+  min-width: 0px;
+}
+.eventImage7 {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+}
+.goingInfo7 {
+  position: relative;
+  font: 400 12px/1.25 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  letter-spacing: -0.2px;
+}
+.flexRow11 {
+  position: relative;
+  display: flex;
+  gap: 0px 3px;
+  margin: 2px 0px 0px;
+  width: 57px;
+  min-width: 0px;
+}
+.freeInfo8 {
+  position: relative;
+  margin: 3px 0px 6px;
+  font: 400 12px/1.25 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+}
