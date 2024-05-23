@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
+import { useUser } from "@clerk/clerk-react";
 import ScrollableText from "../../components/ScrollableText";
 import AuthWrapper from "../../components/AuthWrapper";
 import UnbookmarkedIcon from "@mui/icons-material/BookmarkBorderTwoTone";
@@ -17,6 +18,7 @@ import PencilIcon from "@mui/icons-material/CreateTwoTone";
 export default function Event({}) {
   const pathname = usePathname();
   const router = useRouter();
+  const { isSignedIn } = useUser();
   const id = pathname.replace("/event/", "");
   const [isItemBookmarked, setIsItemBookmarked] = useState(false);
   const [eventDetail, setEventDetail] = useState({});
@@ -28,6 +30,14 @@ export default function Event({}) {
       .then((data) => {
         setEventDetail(data);
       });
+
+    if (isSignedIn) {
+      fetch("/api/event/" + id + "/save")
+        .then((res) => res.json())
+        .then((data) => {
+          setIsItemBookmarked(data.isSaved);
+        });
+    }
   }, []);
 
   useEffect(() => {
@@ -42,7 +52,6 @@ export default function Event({}) {
 
   function getFormattedDate(dateString) {
     const date = new Date(dateString);
-    console.log(date);
 
     const options = {
       month: "long",
@@ -75,8 +84,11 @@ export default function Event({}) {
               <AuthWrapper
                 onClick={(e) => {
                   e.preventDefault();
-                  console.log("Bookmark event");
-                  setIsItemBookmarked(!isItemBookmarked);
+                  fetch("/api/event/" + id + "/save", {
+                    method: isItemBookmarked ? "DELETE" : "POST",
+                  }).then((data) => {
+                    setIsItemBookmarked(!isItemBookmarked);
+                  });
                 }}
               >
                 {isItemBookmarked ? (

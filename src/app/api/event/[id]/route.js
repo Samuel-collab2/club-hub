@@ -61,3 +61,53 @@ export async function GET(req) {
     return NextResponse.error(error);
   }
 }
+
+// PATCH /api/event/[id]
+export async function PATCH(req) {
+  try {
+    const reqData = await req.json();
+    const eventId = req.url.slice(req.url.lastIndexOf("/") + 1);
+
+    // Check if eventId is missing or invalid
+    if (!eventId || isNaN(eventId)) {
+      return NextResponse.json(
+        { error: "Invalid or missing event id" },
+        { status: 400 }
+      );
+    }
+
+    // Check if request body is missing
+    if (!reqData) {
+      return NextResponse.json(
+        { error: "No data submitted for update" },
+        { status: 400 }
+      );
+    }
+
+    const { data, error } = await Database.from("event")
+      .update(reqData)
+      .eq("id", parseInt(eventId))
+      .select();
+
+    // Check if event does not exist
+    if (Object.keys(data).length === 0) {
+      return NextResponse.json(
+        { error: "Attempted to update non-existing event" },
+        { status: 404 }
+      );
+    }
+
+    if (error) {
+      console.error(`Database error during event update: ${JSON.stringify(error)}`);
+      return NextResponse.json(
+        { error: "Error updating event" },
+        { status: 422 }
+      );
+    } else {
+      return NextResponse.json(data[0]);
+    }
+  } catch (error) {
+    console.error(`Error found during event update for eventId ${eventId}: ${JSON.stringify(error)}`);
+    return NextResponse.error(error);
+  }
+}
