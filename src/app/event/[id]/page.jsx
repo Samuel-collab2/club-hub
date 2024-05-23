@@ -25,7 +25,15 @@ export default function Event({}) {
   const [clubDetail, setClubDetail] = useState({});
 
   useEffect(() => {
-    fetch("/api/event/" + id)
+    console.log("isSignedIn", isSignedIn);
+    fetch(
+      "/api/event/" +
+        id +
+        "?" +
+        new URLSearchParams({
+          joined: isSignedIn ? "true" : "false",
+        })
+    )
       .then((res) => res.json())
       .then((data) => {
         setEventDetail(data);
@@ -38,7 +46,7 @@ export default function Event({}) {
           setIsItemBookmarked(data.isSaved);
         });
     }
-  }, []);
+  }, [id, isSignedIn]);
 
   useEffect(() => {
     if (eventDetail.clubId) {
@@ -63,7 +71,6 @@ export default function Event({}) {
     };
 
     const formattedDate = date.toUTCString("en-US", options);
-
     return formattedDate;
   }
 
@@ -144,7 +151,7 @@ export default function Event({}) {
               </span>
               <span className="event-information">
                 <PeopleIcon fontSize="medium" />
-                10{" "}
+                {eventDetail.participantsCount}{" "}
                 {new Date(eventDetail.dateTime) > new Date() ? "going" : "went"}
               </span>
             </EventInformation>
@@ -162,13 +169,27 @@ export default function Event({}) {
                   onClick={(e) => {
                     e.preventDefault();
                     console.log("Join event");
+                    fetch("/api/participant/" + id, { method: "POST" }).then(
+                      (data) => {
+                        console.log(data);
+                      }
+                    );
                   }}
                 >
-                  <JoinButton className="cursor-item">
-                    {eventDetail.maxCapacity ? "Request to Join" : "Join"}
+                  <JoinButton
+                    className={`cursor-item ${
+                      eventDetail.isJoined ? "joined" : ""
+                    }`}
+                  >
+                    {eventDetail.isJoined ? "Joined" : "Join"}
                   </JoinButton>
                 </AuthWrapper>
-                {eventDetail.maxCapacity && <span>10 spots left</span>}
+                {eventDetail.maxCapacity && (
+                  <span>
+                    {eventDetail.maxCapacity - eventDetail.participantsCount}{" "}
+                    spots left
+                  </span>
+                )}
               </JoinActionContainer>
             )}
           </div>
@@ -292,7 +313,8 @@ const JoinButton = styled.button`
   padding: 10px 20px;
   transition: background-color 0.3s;
 
-  &:hover {
-    background-color: #000a3e;
+  &.joined {
+    background-color: #ccc;
+    color: #000;
   }
 `;
