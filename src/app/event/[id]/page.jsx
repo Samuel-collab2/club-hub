@@ -168,12 +168,17 @@ export default function Event({}) {
                 <AuthWrapper
                   onClick={(e) => {
                     e.preventDefault();
-                    console.log("Join event");
-                    fetch("/api/participant/" + id, { method: "POST" }).then(
-                      (data) => {
-                        console.log(data);
-                      }
-                    );
+                    fetch("/api/participant/" + id, {
+                      method: eventDetail.isJoined ? "DELETE" : "POST",
+                    }).then((data) => {
+                      setEventDetail({
+                        ...eventDetail,
+                        isJoined: !eventDetail.isJoined,
+                        participantsCount:
+                          eventDetail.participantsCount +
+                          (eventDetail.isJoined ? -1 : 1),
+                      });
+                    });
                   }}
                 >
                   <JoinButton

@@ -90,7 +90,7 @@ export async function POST(req) {
 // DELETE /api/participate/[event id]
 export async function DELETE(req) {
   try {
-    const {userId} = await req.json()
+    const userId = await getCurrentUserId();
     const eventId = req.url.slice(req.url.lastIndexOf("/") + 1);
 
     if (!eventId || !userId) {
