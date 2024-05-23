@@ -1,21 +1,19 @@
 import { NextResponse } from "next/server";
 import Database from "../../database";
 
-async function query(keyword, sort, table){
+async function query(keyword, table){
     let query = Database.from(table).select("*");
 
     if (keyword !== null) {
         query = query.or(`name.ilike.%${keyword}%, description.ilike.%${keyword}%`);
     }
 
-    query = query.select("name, description")
+    if (table === "event") {
+        query = query.select("clubId, name, description");
+    } else {
+        query = query.select("name, description, campusId");
+    }
 
-    // if (sortBy === "date") {
-    //     query = query.order("created_at", { ascending });
-
-    //     if (table === "event")
-    //         query = query.order("dateTime", { ascending });
-    // } 
 
     const { data, error } = await query;
 
@@ -45,16 +43,48 @@ function relevanceScore(dataset, keyword) {
     });
 }
 
+async function filterEventsByCampusId(data, campusId) {
+    // Use club id of the event to get the campus id
+    const clubIds = data.map((event) => event.clubId);
+
+    // Convert club ids to a unique set
+    let uniqueClubIds = new Set(clubIds);
+
+    // Remove null values from the set
+    uniqueClubIds.delete(null);
+
+    const clubResponse = await Database.from("club").select("id").in("id", uniqueClubIds).eq("campusId", campusId);
+    const validClubIds = clubResponse.data;
+
+    const mappedValidClubIds = validClubIds.map((club) => club.id);
+
+    // Filter events based on valid club ids using for loop
+    return data.filter(event => mappedValidClubIds.includes(event.clubId));
+}
+
+
 // POST /api/query
 export async function POST(req) {
     try {
-        const { keyword, pageSize, page, sort } = await req.json();
+        const { keyword, pageSize, page, sort, campusId, clubOrEvent } = await req.json();
 
-        const clubData = await query(keyword, sort, "club");
-        const eventData = await query(keyword, sort, "event");
+        let clubData = await query(keyword, "club");
+        let eventData = await query(keyword, "event");
 
         relevanceScore(clubData, keyword);
         relevanceScore(eventData, keyword);
+
+        // If campusId is provided, filter data based on campusId
+        if (campusId !== null) {
+            clubData = clubData.filter((club) => club.campusId === campusId);
+            eventData = await filterEventsByCampusId(eventData, campusId);
+        }
+
+        if (clubOrEvent === "club") {
+            eventData = [];
+        } else if (clubOrEvent === "event") {
+            clubData = [];
+        }
         
         // Combine club and event data
         const combinedData = clubData.concat(eventData);
@@ -67,6 +97,8 @@ export async function POST(req) {
                 return b.relevance_score - a.relevance_score;
             }
         });
+
+
 
         const dataPage = combinedData.slice((page - 1) * pageSize, page * pageSize);
        
