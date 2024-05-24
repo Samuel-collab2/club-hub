@@ -9,9 +9,9 @@ async function query(keyword, table){
     }
 
     if (table === "event") {
-        query = query.select("clubId, name, description, dateTime");
+        query = query.select("clubId, name, description, dateTime, banner");
     } else {
-        query = query.select("name, description, campusId");
+        query = query.select("name, description, campusId, banner");
     }
 
 
@@ -66,7 +66,15 @@ async function filterEventsByCampusId(data, campusId) {
 // POST /api/query
 export async function POST(req) {
     try {
-        const { keyword, pageSize, page, sort, campusId, clubOrEvent, includePastEvents } = await req.json();
+        let { keyword, pageSize, page, sort, campusId, clubOrEvent, includePastEvents } = await req.json();
+
+        if (pageSize === undefined || page === undefined || pageSize === null || page === null){
+            pageSize = 10;
+            page = 1;
+        }
+
+        pageSize = parseInt(pageSize);
+        page = parseInt(page);
 
         let [clubData, eventData] = [[], []];
 
@@ -83,7 +91,9 @@ export async function POST(req) {
         relevanceScore(eventData, keyword);
 
         // If campusId is provided, filter data based on campusId
-        if (campusId !== null) {
+        if (campusId !== undefined && campusId !== null && campusId !== "Both") {
+            console.log("campusId: ", campusId);
+            campusId = parseInt(campusId);
             clubData = clubData.filter((club) => club.campusId === campusId);
             eventData = await filterEventsByCampusId(eventData, campusId);
         }

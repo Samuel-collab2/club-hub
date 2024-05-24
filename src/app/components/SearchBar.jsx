@@ -37,7 +37,6 @@ export default function SearchBar({ ...props }) {
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            console.log(e.target.value);
             handleSearch();
           }
         }}
