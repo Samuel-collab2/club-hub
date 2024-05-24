@@ -202,21 +202,19 @@ export default function Home() {
             )}
       </div>
 
-      <FilterLabel>
-        Page
-        <div>
-          {nearestPages.map((pageNumber) => (
-            <PageButton
-              key={pageNumber}
-              type="button"
-              onClick={() => handlePageChange(pageNumber)}
-              style={{ margin: '0 5px' }}
-            >
-              {pageNumber}
-            </PageButton>
-          ))}
-        </div>
-    </FilterLabel>
+      <div style={{margin: "20px", justifyContent: "center",  display: "flex", gap: "5px"}}>
+        {nearestPages.map((pageNumber) => (
+          <PageButton
+            key={pageNumber}
+            type="button"
+            onClick={() => handlePageChange(pageNumber)}
+            style={{ margin: '0 5px' }}
+          >
+            {pageNumber}
+          </PageButton>
+        ))}
+      </div>
+
     </div>
   );
 }

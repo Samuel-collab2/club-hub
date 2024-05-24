@@ -54,6 +54,9 @@ export const PageButton = styled.button`
   border-color: #000A3E;
   font-weight: bold;
   font-size: 15px;
+    &:hover {
+        cursor: pointer;
+    }
   
   `
 
