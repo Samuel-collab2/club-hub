@@ -18,11 +18,12 @@ const getCurrentUserId = async () => {
 export async function POST(req) {
   try {
     const eventId = getEventId(req);
+    const userId = await getCurrentUserId();
     const { data, error } = await Database.from("savedEvents")
       .upsert([
         {
           eventId,
-          userId: await getCurrentUserId(),
+          userId,
         },
       ])
       .select();
