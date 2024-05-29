@@ -69,3 +69,35 @@ export async function POST(req) {
     return NextResponse.error(error);
   }
 }
+
+// GET /api/event
+// Fetch upcoming events for landing page
+export async function GET() {
+  try {
+    // Fetch upcoming events
+    let { data, error } = await Database.from("event")
+      .select()
+      .gt('dateTime', new Date().toISOString())
+      .order('dateTime', {ascending: true})
+      .range(0, 9)
+
+    if (error) {
+      throw new Error(error);
+    }
+
+    // insert club name to response data (need to show in landing page)
+    // Note: Currently doesn't handle scenario where passed in club id doesn't exist in db ... will result in 'club.data[0].name' resulting in error 
+    for (var item of data) {
+      let club = await Database.from("club")
+        .select()
+        .eq('id', item.clubId)
+      item.clubName = club.data[0].name
+    }
+
+    return NextResponse.json(data);
+
+  } catch (error) {
+    console.error(`Error fetching events: ${error}`);
+    return NextResponse.error(error);
+  }
+}
