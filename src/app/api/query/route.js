@@ -9,9 +9,9 @@ async function query(keyword, table){
     }
 
     if (table === "event") {
-        query = query.select("clubId, name, description");
+        query = query.select("clubId, name, description, dateTime, banner");
     } else {
-        query = query.select("name, description, campusId");
+        query = query.select("name, description, campusId, banner");
     }
 
 
@@ -66,26 +66,45 @@ async function filterEventsByCampusId(data, campusId) {
 // POST /api/query
 export async function POST(req) {
     try {
-        const { keyword, pageSize, page, sort, campusId, clubOrEvent } = await req.json();
+        let { keyword, pageSize, page, sort, campusId, clubOrEvent, includePastEvents } = await req.json();
 
-        let clubData = await query(keyword, "club");
-        let eventData = await query(keyword, "event");
+        if (pageSize === undefined || page === undefined || pageSize === null || page === null){
+            pageSize = 10;
+            page = 1;
+        }
+
+        pageSize = parseInt(pageSize);
+        page = parseInt(page);
+
+        let [clubData, eventData] = [[], []];
+
+        if (clubOrEvent === "club") {
+            clubData = await query(keyword, "club");
+        } else if (clubOrEvent === "event") {
+            eventData = await query(keyword, "event");
+        } else {
+            clubData = await query(keyword, "club");
+            eventData = await query(keyword, "event");
+        }
 
         relevanceScore(clubData, keyword);
         relevanceScore(eventData, keyword);
 
         // If campusId is provided, filter data based on campusId
-        if (campusId !== null) {
+        if (campusId !== undefined && campusId !== null && campusId !== "Both") {
+            console.log("campusId: ", campusId);
+            campusId = parseInt(campusId);
             clubData = clubData.filter((club) => club.campusId === campusId);
             eventData = await filterEventsByCampusId(eventData, campusId);
         }
 
-        if (clubOrEvent === "club") {
-            eventData = [];
-        } else if (clubOrEvent === "event") {
-            clubData = [];
+        // If includePastEvents is false, filter out past events
+        if (includePastEvents === false) {
+            const currentDate = new Date();
+            eventData = eventData.filter((event) => new Date(event.dateTime) >= currentDate);
         }
-        
+
+
         // Combine club and event data
         const combinedData = clubData.concat(eventData);
 

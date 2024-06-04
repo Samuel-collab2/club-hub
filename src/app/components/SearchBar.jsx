@@ -4,9 +4,14 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import SchoolIcon from "@mui/icons-material/CorporateFareTwoTone";
+import { sassNull } from "sass";
+import { Input } from "@mui/material";
+import { useRouter } from 'next/navigation';
 
 export default function SearchBar({ ...props }) {
   const [campuses, setCampuses] = useState([]);
+  const [input, setInput] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     fetch("/api/campus")
@@ -16,15 +21,23 @@ export default function SearchBar({ ...props }) {
       });
   }, []);
 
+  const handleSearch = () => {
+    if (input !== null) {
+      router.push(`/search?keyword=${input}`);
+    }
+  };
+
   return (
     <SearchbarContainer {...props}>
-      <SearchIcon />
+      <SearchIcon onClick={handleSearch} style={{ cursor: 'pointer' }} />
       <Searchbar
         type="text"
         placeholder="Search events or groups"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            console.log(e.target.value);
+            handleSearch();
           }
         }}
       />
