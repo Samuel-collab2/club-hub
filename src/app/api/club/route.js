@@ -21,7 +21,6 @@ export async function GET() {
 // Create a club
 export async function POST(req) {
   try {
-    // const { name, description, campus_id, abbreviation, website } = await req.json();
     const { name, description, campusId, email, clubRoom, isPrivate, banner } =
       await req.json();
 
@@ -77,7 +76,7 @@ export async function POST(req) {
         .update({ banner: bannerUrl })
         .eq("id", clubId)
         .select();
-    return NextResponse.json(updateClubBanner);
+    return NextResponse.json(updateClubBanner[0]);
   } catch (error) {
     console.error(`Error creating club: ${error}`);
     return NextResponse.error(error);

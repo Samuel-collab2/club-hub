@@ -29,6 +29,35 @@ export default function CreateEventPage() {
 
   const router = useRouter();
 
+  const createClub = async () => {
+    const res = await fetch("/api/club/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: clubName,
+        campusId: campus,
+        email,
+        clubRoom,
+        isPrivate,
+        description,
+        banner,
+      }),
+    });
+
+    if (res.status === 200) {
+      let clubId;
+      res.json().then((data) => {
+        console.log(data);
+        clubId = data.id;
+        router.push(`/club/${clubId}`);
+      });
+    } else {
+      console.log("Error creating event");
+    }
+  };
+
   useEffect(() => {
     let campuses = JSON.parse(localStorage.getItem("campuses"));
     if (!campuses) {
@@ -174,6 +203,7 @@ export default function CreateEventPage() {
                 description,
                 banner
               );
+              createClub();
             }}
           >
             Request
