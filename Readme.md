@@ -1,4 +1,4 @@
-## Deplotyment
+## Deployment
 Deployed app: https://club-hub-6b9u.vercel.app/
 
 ## Getting Started

@@ -16,6 +16,7 @@ export default function SearchBar({ ...props }) {
       .then((res) => res.json())
       .then((data) => {
         setCampuses(data);
+        localStorage.setItem("campuses", JSON.stringify(data));
       });
   }, []);
 
