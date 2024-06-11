@@ -216,6 +216,7 @@ export default function Event({}) {
             <ModalContent>
               <CloseIcon
                 className="close-icon"
+                onMouseEnter={(e) => (e.target.style.cursor = "pointer")}
                 onClick={() => setShowParticipants(false)}
               />
               <h2>Participants</h2>
