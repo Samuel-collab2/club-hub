@@ -41,10 +41,16 @@ const StyledDescription = styled.p`
     line-height: 1.4;
 `;
 
-export default function SearchItem({ name, description, banner }) {
+export default function SearchItem({ name, description, banner, isClub, id }) {
+    const link = isClub ? `/dedicatedPage/${id}` : `/event/${id}`;
+
+    const handleClick = () => {
+        window.location.href = link
+    }
+
     return (
         <StyledSearchItem>
-            <StyledImage src={banner} alt={name} />
+            <StyledImage onClick={handleClick} src={banner} alt={name} />
             <StyledContent>
                 <StyledTitle>{name}</StyledTitle>
                 <StyledDescription>{description}</StyledDescription>
