@@ -162,7 +162,7 @@ export default function Event({}) {
                 {eventDetail.location}
               </span>
               <span className="event-information">
-                <PeopleIcon onClick={fetchParticipants} fontSize="medium" />
+                <PeopleIconStyled onClick={fetchParticipants} fontSize="medium" />
                 {eventDetail.participantsCount}{" "}
                 {new Date(eventDetail.dateTime) > new Date() ? "going" : "went"}
               </span>
@@ -248,6 +248,10 @@ const EventContainer = styled.div`
     margin-bottom: 10em;
   }
 `;
+
+const PeopleIconStyled = styled(PeopleIcon)`
+  cursor: pointer;
+`
 
 const EventTitle = styled.div`
   margin-bottom: 36px;
