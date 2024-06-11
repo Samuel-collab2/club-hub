@@ -26,6 +26,7 @@ export default function CreateEventPage() {
   const [clubRoom, setClubRoom] = useState("");
   const [description, setDescription] = useState("");
   const [banner, setBanner] = useState(null);
+  const [isClubRequested, setIsClubRequested] = useState(false);
 
   const router = useRouter();
 
@@ -49,9 +50,8 @@ export default function CreateEventPage() {
     if (res.status === 200) {
       let clubId;
       res.json().then((data) => {
-        console.log(data);
         clubId = data.id;
-        router.push(`/club/${clubId}`);
+        setIsClubRequested(true);
       });
     } else {
       console.log("Error creating event");
@@ -81,145 +81,149 @@ export default function CreateEventPage() {
         flexDirection: "column",
       }}
     >
-      <Container>
-        <UploadImage
-          style={{ height: "300px" }}
-          previewImage={banner}
-          setPreviewImage={setBanner}
-        />
-        <ClubInfoContainer>
-          <TextField
-            label=""
-            placeholder="Club Name"
-            variant="outlined"
-            value={clubName}
-            onChange={(e) => {
-              {
+      {isClubRequested ? (
+        "Club Requested successfully! Once approved, you will be able to see your club in the club list."
+      ) : (
+        <Container>
+          <UploadImage
+            style={{ height: "300px" }}
+            previewImage={banner}
+            setPreviewImage={setBanner}
+          />
+          <ClubInfoContainer>
+            <TextField
+              label=""
+              placeholder="Club Name"
+              variant="outlined"
+              value={clubName}
+              onChange={(e) => {
+                {
+                  e.preventDefault();
+                  setClubName(e.target.value);
+                }
+              }}
+              sx={{
+                "& .MuiInputBase-input": {
+                  fontSize: "30px",
+                },
+              }}
+            />
+            <ClubInfoInputContainer>
+              <div className="mini-info-input-form">
+                <SchoolIcon />
+                <FormControl>
+                  <Select
+                    id="campus-select"
+                    value={campus}
+                    label=""
+                    onChange={(e) => {
+                      setCampus(e.target.value);
+                    }}
+                    size="small"
+                  >
+                    {campusOption.map((campus) => {
+                      return (
+                        <MenuItem key={campus.id} value={campus.id}>
+                          {campus.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="mini-info-input-form">
+                <PublicPrivateIcon />
+                <FormControl>
+                  <Select
+                    id="public-private-select"
+                    value={isPrivate}
+                    label=""
+                    onChange={(e) => {
+                      setIsPrivate(e.target.value);
+                    }}
+                    size="small"
+                  >
+                    <MenuItem value={false}>Public</MenuItem>
+                    <MenuItem value={true}>Private</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="mini-info-input-form">
+                <EmailIcon />
+                <TextField
+                  placeholder="Email"
+                  variant="outlined"
+                  id="email-input"
+                  size="small"
+                  value={email}
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setEmail(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="mini-info-input-form">
+                <DoorIcon />
+                <TextField
+                  placeholder="Club Room"
+                  variant="outlined"
+                  id="club-room-input"
+                  size="small"
+                  value={clubRoom}
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setClubRoom(e.target.value);
+                  }}
+                />
+              </div>
+            </ClubInfoInputContainer>
+          </ClubInfoContainer>
+          <EventDescription>
+            <TextField
+              label=""
+              placeholder="Club Description"
+              multiline
+              maxRows={10}
+              minRows={6}
+              value={description}
+              onChange={(e) => {
                 e.preventDefault();
-                setClubName(e.target.value);
-              }
-            }}
-            sx={{
-              "& .MuiInputBase-input": {
-                fontSize: "30px",
-              },
-            }}
-          />
-          <ClubInfoInputContainer>
-            <div className="mini-info-input-form">
-              <SchoolIcon />
-              <FormControl>
-                <Select
-                  id="campus-select"
-                  value={campus}
-                  label=""
-                  onChange={(e) => {
-                    setCampus(e.target.value);
-                  }}
-                  size="small"
-                >
-                  {campusOption.map((campus) => {
-                    return (
-                      <MenuItem key={campus.id} value={campus.id}>
-                        {campus.name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-            </div>
-            <div className="mini-info-input-form">
-              <PublicPrivateIcon />
-              <FormControl>
-                <Select
-                  id="public-private-select"
-                  value={isPrivate}
-                  label=""
-                  onChange={(e) => {
-                    setIsPrivate(e.target.value);
-                  }}
-                  size="small"
-                >
-                  <MenuItem value={false}>Public</MenuItem>
-                  <MenuItem value={true}>Private</MenuItem>
-                </Select>
-              </FormControl>
-            </div>
-            <div className="mini-info-input-form">
-              <EmailIcon />
-              <TextField
-                placeholder="Email"
-                variant="outlined"
-                id="email-input"
-                size="small"
-                value={email}
-                onChange={(e) => {
-                  e.preventDefault();
-                  setEmail(e.target.value);
-                }}
-              />
-            </div>
-            <div className="mini-info-input-form">
-              <DoorIcon />
-              <TextField
-                placeholder="Club Room"
-                variant="outlined"
-                id="club-room-input"
-                size="small"
-                value={clubRoom}
-                onChange={(e) => {
-                  e.preventDefault();
-                  setClubRoom(e.target.value);
-                }}
-              />
-            </div>
-          </ClubInfoInputContainer>
-        </ClubInfoContainer>
-        <EventDescription>
-          <TextField
-            label=""
-            placeholder="Club Description"
-            multiline
-            maxRows={10}
-            minRows={6}
-            value={description}
-            onChange={(e) => {
-              e.preventDefault();
-              setDescription(e.target.value);
-            }}
-          />
-          <SubmitButton
-            className="create-club-submit-btn"
-            type="submit"
-            disabled={false}
-            onClick={(e) => {
-              e.preventDefault();
-              console.log(
-                clubName,
-                campus,
-                isPrivate,
-                email,
-                clubRoom,
-                description,
-                banner
-              );
-              createClub();
-            }}
-          >
-            Request
-          </SubmitButton>
-          <CancelButton
-            className="create-club-submit-btn"
-            type="submit"
-            onClick={(e) => {
-              e.preventDefault();
-              router.back();
-            }}
-          >
-            Cancel
-          </CancelButton>
-        </EventDescription>
-      </Container>
+                setDescription(e.target.value);
+              }}
+            />
+            <SubmitButton
+              className="create-club-submit-btn"
+              type="submit"
+              disabled={false}
+              onClick={(e) => {
+                e.preventDefault();
+                console.log(
+                  clubName,
+                  campus,
+                  isPrivate,
+                  email,
+                  clubRoom,
+                  description,
+                  banner
+                );
+                createClub();
+              }}
+            >
+              Request
+            </SubmitButton>
+            <CancelButton
+              className="create-club-submit-btn"
+              type="submit"
+              onClick={(e) => {
+                e.preventDefault();
+                router.back();
+              }}
+            >
+              Cancel
+            </CancelButton>
+          </EventDescription>
+        </Container>
+      )}
     </div>
   );
 }
