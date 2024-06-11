@@ -1,13 +1,12 @@
 import Image from "next/image";
 import styled from "styled-components";
-import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
-import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 
-const EventCard = ( { event } ) => {
-    const path = "/event/" + event.id
-    const eventName = event.name;
+const ClubCard = ( { club } ) => {
+    const path = "/club/" + club.id
+
+    const clubName = club.name;
     // Use titleCondition to change event tile size to better fit inside card based on title character length
-    const titleCondition = eventName.length <= 17 ? true: false;
+    const titleCondition = clubName.length <= 17 ? true: false;
 
     return (
         <Card >
@@ -15,7 +14,7 @@ const EventCard = ( { event } ) => {
                 <div id="img-container">
                     <a href= {path} >
                         <Image
-                            src={event.banner}
+                            src={club.banner}
                             alt="banner"
                             width={500}
                             height={300}
@@ -28,28 +27,20 @@ const EventCard = ( { event } ) => {
                     <div >
                         <a href= {path} >
                             {titleCondition && 
-                                <h2 className="event-text"> {event.name} </h2>
+                                <>
+                                    <h2 className="event-text"> {clubName} </h2>
+                                    <span className="club-room">ClubRoom: <h2 className="event-text room-text"> {club.clubRoom} </h2></span>
+                                </>
                             }
                             {!titleCondition && 
-                                <h3 className="event-text"> {event.name} </h3>
+                                <>
+                                    <h3 className="event-text2"> {clubName} </h3>
+                                    <span className="club-room">ClubRoom: <h2 className="event-text room-text"> {club.clubRoom} </h2></span>
+                                </>
+
                             }
 
                         </a>
-                        <h3 className="event-text" id="club-title"> Host: { event.clubName } </h3>
-                    </div>
-
-                    <div className="icon-div">
-                        <CalendarTodayOutlinedIcon className="icon"></CalendarTodayOutlinedIcon>
-                        <p className="icon-p"> 
-                            { new Date(event.dateTime).toUTCString().slice(0, -7) } 
-                        </p>
-                    </div>
-
-                    <div className="icon-div">
-                        <PeopleAltOutlinedIcon className="icon"></PeopleAltOutlinedIcon>
-                        <p className="icon-p"> 
-                            { event.participantsCount } 
-                        </p>
                     </div>
                 </div>
             </div>
@@ -62,6 +53,18 @@ const Card = styled.div`
     div > a {
         text-decoration: none !important;
         color: black;
+    }
+
+    .club-room {
+        // color: #260fbd;
+        font-weight: bold;
+    }
+
+    .room-text {
+        text-align: left;
+        font-size: 1em;
+        font-weight: normal;
+        // color: #260fbd;
     }
 
     #card {
@@ -99,6 +102,11 @@ const Card = styled.div`
         margin: 0px;
     }
 
+    .event-text2 {
+        margin: 0px;
+        padding-bottom: 5px;
+    }
+
     #club-title {
         margin: 0px;
         font-size: 1em;
@@ -119,4 +127,4 @@ const Card = styled.div`
     }
 `;
 
-export default EventCard
+export default ClubCard

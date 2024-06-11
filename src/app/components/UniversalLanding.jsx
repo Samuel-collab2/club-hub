@@ -39,7 +39,7 @@ export default function UniversalLanding({}) {
         <CalendarIcon className="title-icon" /> Upcoming Events
       </SectionTitle>
 
-      <Temp>
+      <div>
         {events && (
             <Carousel 
               responsive={responsive}
@@ -50,7 +50,7 @@ export default function UniversalLanding({}) {
               ))}
             </Carousel>
           )}
-      </Temp>
+      </div>
     </>
   );
 }
@@ -62,14 +62,5 @@ const SectionTitle = styled.h2`
 
   .title-icon {
     font-size: 1.5em;
-  }
-`;
-
-
-const Temp = styled.div`
-
-  // Use to alter carousel items
-  ul > li {
-    max-width: 250px;
   }
 `;

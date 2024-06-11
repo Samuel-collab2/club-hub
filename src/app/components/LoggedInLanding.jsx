@@ -6,6 +6,7 @@ import ClubIcon from "@mui/icons-material/GroupsTwoTone";
 import styled from "styled-components";
 
 import EventCard from "../components/eventCard";
+import ClubCard from "../components/clubCard";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { responsive } from '../data'
@@ -15,6 +16,7 @@ import { useEffect, useState } from "react";
 export default function LoggedInLanding({userId}) {
 
     const [savedEvents, setSavedEvents] = useState([]);
+    const [savedClubs, setSavedClubs] = useState([]);
     
     const fetchSavedEvents = async () => {
         try {
@@ -36,9 +38,31 @@ export default function LoggedInLanding({userId}) {
             console.error(error);
         }
       };
+    
+    const fetchSavedClubs = async () => {
+    try {
+        const res = await fetch("/api/landing/savedClubs", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                clerkId: userId,
+            }),
+            });
+        
+        if (!res.ok) {
+            throw new Error('Failed to fetch savedClubs data');
+        }
+        setSavedClubs(await res.json());
+    } catch (error) {
+        console.error(error);
+    }
+    };
 
     useEffect(() => {
         fetchSavedEvents();
+        fetchSavedClubs();
     }, []);
 
     if (Object.keys(savedEvents).length === 0) {
@@ -62,7 +86,7 @@ export default function LoggedInLanding({userId}) {
                     Saved Events
                 </SectionTitle>
                 
-                <Temp>
+                <div>
                     {savedEvents && (
                         <Carousel 
                         responsive={responsive}
@@ -73,12 +97,25 @@ export default function LoggedInLanding({userId}) {
                         ))}
                         </Carousel>
                     )}
-                </Temp>
+                </div>
     
                 <SectionTitle>
                     <ClubIcon className="title-icon" />
                     Your Clubs
                 </SectionTitle>
+
+                <div>
+                    {savedClubs && (
+                        <Carousel 
+                        responsive={responsive}
+                        itemClass="carousel-item-width-200px"
+                        >
+                        {savedClubs.map(savedClub => (
+                            <ClubCard key = {savedClub.id} club = {savedClub}></ClubCard>
+                        ))}
+                        </Carousel>
+                    )}
+                </div>
             </>
         );
     }
@@ -91,13 +128,5 @@ export default function LoggedInLanding({userId}) {
 
   .title-icon {
     font-size: 1.5em;
-  }
-`;
-
-const Temp = styled.div`
-
-  // Use to alter carousel items
-  ul > li {
-    max-width: 250px;
   }
 `;

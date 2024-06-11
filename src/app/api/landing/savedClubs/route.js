@@ -1,7 +1,7 @@
 import Database from "../../../database";
 import { NextResponse } from "next/server";
 
-// POST /api/landing/savedEvents
+// POST /api/landing/savedClubs
 export async function POST(req) {
   try {
     const {
@@ -25,39 +25,38 @@ export async function POST(req) {
         throw new Error("Passed in Clerk Id does not exist in DB");    
     }
 
-    //use data to find and return saved events
+    //use data to find and return subscribed Clubs
 
-    const savedEventsData = await Database.from("savedEvents")
+    const clubSubscriberData = await Database.from("clubSubscriber")
         .select()
         .eq('userId', data[0].id);
 
-    if (savedEventsData.error) {
-        throw new Error(savedEventsData.error);
+    if (clubSubscriberData.error) {
+        throw new Error(clubSubscriberData.error);
     } 
     
-    // handle if there are no saved events associated with passed clerkId
-    if (Object.keys(savedEventsData.data).length === 0) {
+    // handle if there are no subscribed clubs associated with passed clerkId
+    if (Object.keys(clubSubscriberData.data).length === 0) {
         return NextResponse.json([])
     }
 
-    let userSavedEvents = []
+    let subscribedClubs = []
     // Grab events saved to user + add club name (needed for landing page)
-    for (var item of savedEventsData.data) {
-        let eventItem = await Database.from("event")
-            .select()
-            .eq('id', item.eventId)
+    for (var item of clubSubscriberData.data) {
+        console.log(item)
         let clubItem = await Database.from("club")
             .select()
-            .eq('id', eventItem.data[0].clubId)
-        eventItem.data[0].clubName = clubItem.data[0].name
-        userSavedEvents.push(eventItem.data[0])
+            .eq('id', item.clubId)
+        console.log(clubItem)
+
+        subscribedClubs.push(clubItem.data[0])
       }
 
-    return NextResponse.json(userSavedEvents)
+    return NextResponse.json(subscribedClubs)
 
 
   } catch (error) {
-    console.error(`Error found during saved events fetch: ${error}`);
+    console.error(`Error found during subscribed clubs fetch: ${error}`);
     return NextResponse.error(error);
   }
 }
