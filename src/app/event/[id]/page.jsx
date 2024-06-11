@@ -78,7 +78,6 @@ export default function Event({}) {
     return (
       <div
         style={{
-          width: "100vw",
           alignItems: "center",
           display: "flex",
           flexDirection: "column",
@@ -211,9 +210,14 @@ const EventContainer = styled.div`
   flex-direction: column;
   margin: 2em;
   max-width: 1024px;
+  background-color: red;
 
   .cursor-item {
     cursor: pointer;
+  }
+
+  @media (max-height: 768px) {
+    margin-bottom: 10em;
   }
 `;
 
@@ -224,6 +228,7 @@ const EventTitle = styled.div`
     margin: 0;
   }
 
+  background-color: blue;
   #club-event-hyperlink {
     cursor: pointer;
   }
@@ -258,6 +263,8 @@ const EventInformation = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  background-color: green;
 
   #event-description {
     margin-bottom: 30px;
@@ -306,6 +313,7 @@ const JoinActionContainer = styled.div`
   flex-direction: column;
   gap: 10px;
   align-items: center;
+  background-color: pink;
 `;
 
 const JoinButton = styled.button`
