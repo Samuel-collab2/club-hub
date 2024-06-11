@@ -210,7 +210,6 @@ const EventContainer = styled.div`
   flex-direction: column;
   margin: 2em;
   max-width: 1024px;
-  background-color: red;
 
   .cursor-item {
     cursor: pointer;
@@ -228,7 +227,6 @@ const EventTitle = styled.div`
     margin: 0;
   }
 
-  background-color: blue;
   #club-event-hyperlink {
     cursor: pointer;
   }
@@ -264,7 +262,6 @@ const EventInformation = styled.div`
   flex-direction: column;
   gap: 10px;
 
-  background-color: green;
 
   #event-description {
     margin-bottom: 30px;
@@ -313,7 +310,6 @@ const JoinActionContainer = styled.div`
   flex-direction: column;
   gap: 10px;
   align-items: center;
-  background-color: pink;
 `;
 
 const JoinButton = styled.button`
