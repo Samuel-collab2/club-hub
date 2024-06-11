@@ -14,6 +14,7 @@ import Locationicon from "@mui/icons-material/LocationOnTwoTone";
 import VirtualLocationIcon from "@mui/icons-material/VideocamTwoTone";
 import PeopleIcon from "@mui/icons-material/PeopleAltTwoTone";
 import PencilIcon from "@mui/icons-material/CreateTwoTone";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function Event({}) {
   const pathname = usePathname();
@@ -23,6 +24,8 @@ export default function Event({}) {
   const [isItemBookmarked, setIsItemBookmarked] = useState(false);
   const [eventDetail, setEventDetail] = useState({});
   const [clubDetail, setClubDetail] = useState({});
+  const [showParticipants, setShowParticipants] = useState(false);
+  const [participants, setParticipants] = useState([]);
 
   useEffect(() => {
     console.log("isSignedIn", isSignedIn);
@@ -74,6 +77,16 @@ export default function Event({}) {
     return formattedDate;
   }
 
+  const fetchParticipants = () => {
+    fetch("/api/participant/" + id)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setParticipants(data);
+        setShowParticipants(true);
+      });
+  };
+
   if (eventDetail) {
     return (
       <div
@@ -115,7 +128,7 @@ export default function Event({}) {
               id="club-event-hyperlink"
               onClick={(e) => {
                 e.preventDefault();
-                router.push(`/club/${eventDetail.clubId}`);
+                router.push(`/dedicatedPage/${eventDetail.clubId}`);
               }}
             >
               by <u>{clubDetail.name}</u>
@@ -149,7 +162,7 @@ export default function Event({}) {
                 {eventDetail.location}
               </span>
               <span className="event-information">
-                <PeopleIcon fontSize="medium" />
+                <PeopleIcon onClick={fetchParticipants} fontSize="medium" />
                 {eventDetail.participantsCount}{" "}
                 {new Date(eventDetail.dateTime) > new Date() ? "going" : "went"}
               </span>
@@ -198,6 +211,22 @@ export default function Event({}) {
             )}
           </div>
         </EventSummaryContainer>
+        {showParticipants && (
+          <ParticipantsModal>
+            <ModalContent>
+              <CloseIcon
+                className="close-icon"
+                onClick={() => setShowParticipants(false)}
+              />
+              <h2>Participants</h2>
+              <ParticipantsList>
+                {participants.map((participant) => (
+                  <li key={participant.email}> {participant.firstName} {participant.lastName} - {participant.email}</li>
+                ))}
+              </ParticipantsList>
+            </ModalContent>
+          </ParticipantsModal>
+        )}
       </div>
     );
   } else {
@@ -325,5 +354,45 @@ const JoinButton = styled.button`
   &.joined {
     background-color: #ccc;
     color: #000;
+  }
+`;
+
+const ParticipantsModal = styled.div`
+  display: block;
+  position: fixed;
+  z-index: 1;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+`;
+
+const ModalContent = styled.div`
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px;
+  position: relative;
+  border-radius: 15px;
+`;
+
+const ParticipantsList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+  }
+
+  li:last-child {
+    border-bottom: none;
   }
 `;
