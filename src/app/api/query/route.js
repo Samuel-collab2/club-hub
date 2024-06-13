@@ -9,9 +9,9 @@ async function query(keyword, table){
     }
 
     if (table === "event") {
-        query = query.select("clubId, name, description, dateTime, banner");
+        query = query.select("id, clubId, name, description, dateTime, banner");
     } else {
-        query = query.select("name, description, campusId, banner");
+        query = query.select("id, name, description, campusId, banner");
     }
 
 
@@ -104,9 +104,13 @@ export async function POST(req) {
             eventData = eventData.filter((event) => new Date(event.dateTime) >= currentDate);
         }
 
+        clubData.forEach((club) => club.isClub = true);
+        eventData.forEach((event) => event.isClub = false);
 
         // Combine club and event data
         const combinedData = clubData.concat(eventData);
+
+        console.log("combinedData: ", combinedData);
 
         // Sort data based on relevance score
         combinedData.sort((a, b) => {
