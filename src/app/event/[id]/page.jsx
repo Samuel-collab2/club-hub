@@ -10,22 +10,31 @@ import AuthWrapper from "../../components/AuthWrapper";
 import UnbookmarkedIcon from "@mui/icons-material/BookmarkBorderTwoTone";
 import BookmarkedIcon from "@mui/icons-material/Bookmark";
 import CalendarIcon from "@mui/icons-material/CalendarMonthTwoTone";
-import Locationicon from "@mui/icons-material/LocationOnTwoTone";
+import LocationIcon from "@mui/icons-material/LocationOnTwoTone";
 import VirtualLocationIcon from "@mui/icons-material/VideocamTwoTone";
 import PeopleIcon from "@mui/icons-material/PeopleAltTwoTone";
 import PencilIcon from "@mui/icons-material/CreateTwoTone";
+import { Edit } from "@mui/icons-material";
+import UploadImage from "../../components/UploadImage";
+import TextField from "@mui/material/TextField";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+
+import ParticiapantIcon from "@mui/icons-material/PeopleOutlineTwoTone";
+import VeideoCamIcon from "@mui/icons-material/VideocamTwoTone";
 
 export default function Event({}) {
   const pathname = usePathname();
   const router = useRouter();
   const { isSignedIn } = useUser();
   const id = pathname.replace("/event/", "");
+
+  const [isEditMode, setEditMode] = useState(false);
   const [isItemBookmarked, setIsItemBookmarked] = useState(false);
   const [eventDetail, setEventDetail] = useState({});
   const [clubDetail, setClubDetail] = useState({});
 
   useEffect(() => {
-    console.log("isSignedIn", isSignedIn);
     fetch(
       "/api/event/" +
         id +
@@ -74,7 +83,7 @@ export default function Event({}) {
     return formattedDate;
   }
 
-  if (eventDetail) {
+  if (!isEditMode && eventDetail) {
     return (
       <div
         style={{
@@ -104,13 +113,15 @@ export default function Event({}) {
                   <UnbookmarkedIcon fontSize="big" className="cursor-item" />
                 )}
               </AuthWrapper>
-              <PencilIcon
-                className="cursor-item"
-                onClick={(e) => {
-                  e.preventDefault();
-                  console.log("Edit event");
-                }}
-              />
+              {new Date(eventDetail.dateTime) > new Date() && (
+                <PencilIcon
+                  className="cursor-item"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setEditMode(true);
+                  }}
+                />
+              )}
             </Title>
             <span
               id="club-event-hyperlink"
@@ -144,7 +155,7 @@ export default function Event({}) {
                 {eventDetail.isVirtual ? (
                   <VirtualLocationIcon fontSize="medium" />
                 ) : (
-                  <Locationicon fontSize="medium" />
+                  <LocationIcon fontSize="medium" />
                 )}
 
                 {eventDetail.location}
@@ -201,8 +212,18 @@ export default function Event({}) {
         </EventSummaryContainer>
       </div>
     );
+  } else if (isEditMode) {
+    return (
+      <EventEditMode
+        eventData={eventDetail}
+        clubName={clubDetail.name}
+        revokeEditMode={() => {
+          setEditMode(false);
+        }}
+      />
+    );
   } else {
-    return <div>Loading...</div>;
+    <div>Loading...</div>;
   }
 }
 
@@ -323,3 +344,302 @@ const JoinButton = styled.button`
     color: #000;
   }
 `;
+
+function EventEditMode({ eventData, clubName, revokeEditMode }) {
+  const router = useRouter();
+  const [previewImage, setPreviewImage] = useState(eventData.banner);
+  const [eventName, setEventName] = useState(eventData.name);
+  const [eventDescription, setEventDescription] = useState(
+    eventData.description
+  );
+  const [eventLocation, setEventLocation] = useState(eventData.location);
+  const [startDate, setDate] = useState(null);
+  const [isVirtual, setIsVirtual] = useState(eventData.isVirtual);
+  const [maxParticipants, setMaxParticipants] = useState(eventData.maxCapacity);
+  const [noParticipantLimit, setNoParticipantLimit] = useState(
+    eventData.maxCapacity === null
+  );
+
+  useEffect(() => {
+    setDate(convertDateString(eventData.dateTime));
+  }, []);
+
+  function convertDateString(inputDate) {
+    const date = new Date(inputDate);
+
+    // Extract the parts we need
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(date.getUTCDate()).padStart(2, "0");
+    const hours = String(date.getUTCHours()).padStart(2, "0");
+    const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+
+    // Construct the formatted date string
+    const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+    return formattedDate;
+  }
+
+  async function updateEvent() {
+    const res = await fetch("/api/event/" + eventData.id, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: eventName,
+        dateTime: startDate,
+        description: eventDescription,
+        location: eventLocation,
+        isVirtual,
+        maxCapacity: noParticipantLimit ? null : maxParticipants,
+        banner: previewImage !== eventData.banner ? previewImage : undefined,
+      }),
+    });
+
+    if (res.status === 200) {
+      res.json().then(() => {
+        window.location.reload();
+      });
+    } else {
+      console.log("Error updating event");
+    }
+  }
+
+  return (
+    <div
+      style={{
+        width: "100%",
+        alignItems: "center",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <Container>
+        <UploadImage
+          previewImage={previewImage}
+          setPreviewImage={setPreviewImage}
+          style={{ height: "300px" }}
+        />
+        <EventInfoContainer>
+          <div>
+            <TextField
+              placeholder="Event Title"
+              value={eventName}
+              onChange={(e) => {
+                e.preventDefault();
+                setEventName(e.target.value);
+              }}
+              sx={{
+                "& .MuiInputBase-input": {
+                  fontSize: "30px",
+                },
+              }}
+            />
+            <p>by {clubName}</p>
+          </div>
+          <EventInfoInputContainer>
+            <div className="mini-info-input-form">
+              <CalendarIcon />
+              <input
+                type="datetime-local"
+                id="date-picker-input"
+                value={startDate}
+                onChange={(e) => {
+                  e.preventDefault();
+                  setDate(e.target.value);
+                }}
+              />
+            </div>
+            <div className="mini-info-input-form">
+              {isVirtual ? <VeideoCamIcon /> : <LocationIcon />}
+              <TextField
+                placeholder={isVirtual ? "Event Link" : "Location"}
+                value={eventLocation}
+                size="small"
+                onChange={(e) => {
+                  e.preventDefault();
+                  setEventLocation(e.target.value);
+                }}
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isVirtual}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsVirtual(!isVirtual);
+                      setEventLocation("");
+                    }}
+                  />
+                }
+                label="virtual event"
+              />
+            </div>
+            <div className="mini-info-input-form">
+              <ParticiapantIcon />
+              <TextField
+                placeholder="Max Particiapants"
+                size="small"
+                type="number"
+                value={maxParticipants}
+                disabled={noParticipantLimit}
+                InputProps={{ inputProps: { min: 0 } }}
+                onChange={(e) => {
+                  e.preventDefault();
+                  setMaxParticipants(e.target.value);
+                }}
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={noParticipantLimit}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setNoParticipantLimit(!noParticipantLimit);
+                      setMaxParticipants(null);
+                    }}
+                  />
+                }
+                label="no participants limit"
+              />
+            </div>
+          </EventInfoInputContainer>
+        </EventInfoContainer>
+        <EventDescriptionEdit>
+          <TextField
+            placeholder="Event Description"
+            multiline
+            maxRows={10}
+            minRows={6}
+            id="event-description-input"
+            value={eventDescription}
+            onChange={(e) => {
+              e.preventDefault();
+              setEventDescription(e.target.value);
+            }}
+          />
+          <ActionButtonContainer>
+            <DeleteButton className="create-event-action-btn">
+              Delete Event
+            </DeleteButton>
+            <SubmitButton
+              className="create-event-action-btn"
+              type="submit"
+              disabled={false}
+              onClick={(e) => {
+                e.preventDefault();
+                updateEvent();
+              }}
+            >
+              Update Event
+            </SubmitButton>
+            <CancelButton
+              className="create-event-action-btn"
+              type="submit"
+              onClick={(e) => {
+                e.preventDefault();
+                revokeEditMode();
+              }}
+            >
+              Cancel
+            </CancelButton>
+          </ActionButtonContainer>
+        </EventDescriptionEdit>
+      </Container>
+    </div>
+  );
+}
+
+const Container = styled.div`
+  margin: 2em;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 20px;
+
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+  }
+`;
+
+const EventInfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  justify-content: space-between;
+  height: 300px;
+  margin-bottom: 30px;
+`;
+
+const EventInfoInputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: space-evenly;
+
+  #date-picker-input {
+    border: solid 1px #d1d1d1;
+    padding: 10px;
+    border-radius: 3px;
+  }
+
+  .mini-info-input-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+    #max-participant-input {
+      margin-left: 40px;
+    }
+  }
+`;
+
+const EventDescriptionEdit = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  grid-column: 2;
+  padding: 10px;
+
+  .create-event-action-btn {
+    width: 100px;
+    height: 40px;
+  }
+`;
+
+const ActionButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+`;
+
+const DeleteButton = styled.button`
+  background-color: #ff3333;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  align-self: flex-end;
+`;
+
+const CancelButton = styled.button`
+  background-color: white;
+  color: black;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  border: solid 2px #000;
+  border-radius: 5px;
+  align-self: flex-end;
+`;
+
+const SubmitButton = styled.button`
+  background-color: #000a3e;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  align-self: flex-end;
+`;
+
