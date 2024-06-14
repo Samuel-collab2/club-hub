@@ -519,7 +519,17 @@ function EventEditMode({ eventData, clubName, revokeEditMode }) {
             }}
           />
           <ActionButtonContainer>
-            <DeleteButton className="create-event-action-btn">
+            <DeleteButton
+              className="create-event-action-btn"
+              onClick={(e) => {
+                e.preventDefault();
+                fetch("/api/event/" + eventData.id, {
+                  method: "DELETE",
+                }).then(() => {
+                  router.push("/");
+                });
+              }}
+            >
               Delete Event
             </DeleteButton>
             <SubmitButton
