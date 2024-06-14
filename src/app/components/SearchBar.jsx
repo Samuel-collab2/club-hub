@@ -4,8 +4,6 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import SchoolIcon from "@mui/icons-material/CorporateFareTwoTone";
-import { sassNull } from "sass";
-import { Input } from "@mui/material";
 import { useRouter } from 'next/navigation';
 
 export default function SearchBar({ ...props }) {
@@ -18,15 +16,17 @@ export default function SearchBar({ ...props }) {
       .then((res) => res.json())
       .then((data) => {
         setCampuses(data);
+        localStorage.setItem("campuses", JSON.stringify(data));
       });
   }, []);
 
   const handleSearch = () => {
-    if (input !== null) {
-      router.push(`/search?keyword=${input}`);
+    if (input !== '') {
+      const newUrl = `/search?keyword=${input}`;
+      router.push(newUrl);
+      window.location.href = newUrl;
     }
   };
-
   return (
     <SearchbarContainer {...props}>
       <SearchIcon onClick={handleSearch} style={{ cursor: 'pointer' }} />

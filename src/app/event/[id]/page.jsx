@@ -22,6 +22,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 
 import ParticiapantIcon from "@mui/icons-material/PeopleOutlineTwoTone";
 import VeideoCamIcon from "@mui/icons-material/VideocamTwoTone";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function Event({}) {
   const pathname = usePathname();
@@ -33,6 +34,8 @@ export default function Event({}) {
   const [isItemBookmarked, setIsItemBookmarked] = useState(false);
   const [eventDetail, setEventDetail] = useState({});
   const [clubDetail, setClubDetail] = useState({});
+  const [showParticipants, setShowParticipants] = useState(false);
+  const [participants, setParticipants] = useState([]);
 
   useEffect(() => {
     fetch(
@@ -67,6 +70,10 @@ export default function Event({}) {
     }
   }, [eventDetail]);
 
+  useEffect(() => {
+    console.log("In Edit Mode" + isEditMode);  
+  }, [isEditMode])
+
   function getFormattedDate(dateString) {
     const date = new Date(dateString);
 
@@ -83,11 +90,22 @@ export default function Event({}) {
     return formattedDate;
   }
 
-  if (!isEditMode && eventDetail) {
+  const fetchParticipants = () => {
+    fetch("/api/participant/" + id)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setParticipants(data);
+        setShowParticipants(true);
+      });
+  };
+
+
+
+  if (eventDetail && !isEditMode) {
     return (
       <div
         style={{
-          width: "100vw",
           alignItems: "center",
           display: "flex",
           flexDirection: "column",
@@ -127,7 +145,7 @@ export default function Event({}) {
               id="club-event-hyperlink"
               onClick={(e) => {
                 e.preventDefault();
-                router.push(`/club/${eventDetail.clubId}`);
+                router.push(`/dedicatedPage/${eventDetail.clubId}`);
               }}
             >
               by <u>{clubDetail.name}</u>
@@ -161,7 +179,7 @@ export default function Event({}) {
                 {eventDetail.location}
               </span>
               <span className="event-information">
-                <PeopleIcon fontSize="medium" />
+                <PeopleIconStyled onClick={fetchParticipants} fontSize="medium" />
                 {eventDetail.participantsCount}{" "}
                 {new Date(eventDetail.dateTime) > new Date() ? "going" : "went"}
               </span>
@@ -210,10 +228,32 @@ export default function Event({}) {
             )}
           </div>
         </EventSummaryContainer>
+        {showParticipants && (
+          <ParticipantsModal>
+            <ModalContent>
+              <CloseIcon
+                className="close-icon"
+                onMouseEnter={(e) => (e.target.style.cursor = "pointer")}
+                onClick={() => setShowParticipants(false)}
+              />
+              <h2>Participants</h2>
+              <ParticipantsList>
+                {participants.map((participant) => (
+                  <li key={participant.email}> {participant.firstName} {participant.lastName} - {participant.email}</li>
+                ))}
+              </ParticipantsList>
+            </ModalContent>
+          </ParticipantsModal>
+        )}
       </div>
     );
-  } else if (isEditMode) {
+  } else {
+    <div>Loading...</div>;
+  }
+
+  if (isEditMode) {
     return (
+      // <p>Edit Mode</p>
       <EventEditMode
         eventData={eventDetail}
         clubName={clubDetail.name}
@@ -222,8 +262,6 @@ export default function Event({}) {
         }}
       />
     );
-  } else {
-    <div>Loading...</div>;
   }
 }
 
@@ -236,7 +274,15 @@ const EventContainer = styled.div`
   .cursor-item {
     cursor: pointer;
   }
+
+  @media (max-height: 768px) {
+    margin-bottom: 10em;
+  }
 `;
+
+const PeopleIconStyled = styled(PeopleIcon)`
+  cursor: pointer;
+`
 
 const EventTitle = styled.div`
   margin-bottom: 36px;
@@ -279,6 +325,7 @@ const EventInformation = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+
 
   #event-description {
     margin-bottom: 30px;
@@ -653,3 +700,42 @@ const SubmitButton = styled.button`
   align-self: flex-end;
 `;
 
+const ParticipantsModal = styled.div`
+  display: block;
+  position: fixed;
+  z-index: 1;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+`;
+
+const ModalContent = styled.div`
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px;
+  position: relative;
+  border-radius: 15px;
+`;
+
+const ParticipantsList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+  }
+
+  li:last-child {
+    border-bottom: none;
+  }
+`;

@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import UploadImage from "../components/UploadImage";
 import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 import PublicPrivateIcon from "@mui/icons-material/VpnLockTwoTone";
 import SchoolIcon from "@mui/icons-material/CorporateFareTwoTone";
@@ -15,23 +18,58 @@ export default function CreateEventPage() {
   const defaultEndDate = new Date();
   defaultEndDate.setDate(defaultEndDate.getDate() + 7);
 
-  const [startDate, setDate] = useState(new Date());
   const [clubName, setClubName] = useState("");
   const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
-  const [maxParticipants, setMaxParticipants] = useState(0);
-  const [noParticipantLimit, setNoParticipantLimit] = useState(false);
-  const [isVirtual, setIsVirtual] = useState(false);
-  const [campuses, setCampuses] = useState([]);
+  const [campusOption, setCampusOption] = useState([]);
+  const [campus, setCampus] = useState(null);
+  const [isPrivate, setIsPrivate] = useState(false);
+  const [clubRoom, setClubRoom] = useState("");
+  const [description, setDescription] = useState("");
+  const [banner, setBanner] = useState(null);
+  const [isClubRequested, setIsClubRequested] = useState(false);
 
   const router = useRouter();
 
-  useEffect(() => {
-    fetch("/api/campus")
-      .then((res) => res.json())
-      .then((data) => {
-        setCampuses(data);
+  const createClub = async () => {
+    const res = await fetch("/api/club/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: clubName,
+        campusId: campus,
+        email,
+        clubRoom,
+        isPrivate,
+        description,
+        banner,
+      }),
+    });
+
+    if (res.status === 200) {
+      let clubId;
+      res.json().then((data) => {
+        clubId = data.id;
+        setIsClubRequested(true);
       });
+    } else {
+      console.log("Error creating event");
+    }
+  };
+
+  useEffect(() => {
+    let campuses = JSON.parse(localStorage.getItem("campuses"));
+    if (!campuses) {
+      fetch("/api/campus")
+        .then((res) => res.json())
+        .then((data) => {
+          campuses = data;
+          localStorage.setItem("campuses", JSON.stringify(data));
+        });
+    }
+    setCampusOption(campuses);
+    setCampus(campuses[0].id);
   }, []);
 
   return (
@@ -43,102 +81,149 @@ export default function CreateEventPage() {
         flexDirection: "column",
       }}
     >
-      <Container>
-        <UploadImage style={{ height: "300px" }} />
-        <ClubInfoContainer>
-          <TextField
-            label=""
-            placeholder="Club Name"
-            variant="outlined"
-            sx={{
-              "& .MuiInputBase-input": {
-                fontSize: "30px",
-              },
-            }}
+      {isClubRequested ? (
+        "Club Requested successfully! Once approved, you will be able to see your club in the club list."
+      ) : (
+        <Container>
+          <UploadImage
+            style={{ height: "300px" }}
+            previewImage={banner}
+            setPreviewImage={setBanner}
           />
-          <ClubInfoInputContainer>
-            <div className="mini-info-input-form">
-              <SchoolIcon />
-              <input
-                type="datetime-local"
-                id="date-picker-input"
-                value={startDate}
-                onChange={(e) => {
+          <ClubInfoContainer>
+            <TextField
+              label=""
+              placeholder="Club Name"
+              variant="outlined"
+              value={clubName}
+              onChange={(e) => {
+                {
                   e.preventDefault();
-                  setDate(e.target.value);
-                }}
-              />
-            </div>
-            <div className="mini-info-input-form">
-              <PublicPrivateIcon />
-              <TextField
-                label=""
-                placeholder={isVirtual ? "Event Link" : "Location"}
-                variant="outlined"
-                size="small"
-              />
-            </div>
-            <div className="mini-info-input-form">
-              <EmailIcon />
-              <TextField
-                label=""
-                placeholder="Max Particiapants"
-                variant="outlined"
-                size="small"
-                type="number"
-                value={maxParticipants}
-                disabled={noParticipantLimit}
-                onChange={(e) => {
-                  e.preventDefault();
-                  setMaxParticipants(e.target.value);
-                }}
-              />
-            </div>
-            <div className="mini-info-input-form">
-              <DoorIcon />
-              <TextField
-                label=""
-                placeholder="Max Particiapants"
-                variant="outlined"
-                size="small"
-                type="number"
-                value={maxParticipants}
-                disabled={noParticipantLimit}
-                onChange={(e) => {
-                  e.preventDefault();
-                  setMaxParticipants(e.target.value);
-                }}
-              />
-            </div>
-          </ClubInfoInputContainer>
-        </ClubInfoContainer>
-        <EventDescription>
-          <TextField
-            label=""
-            placeholder="Club Description"
-            multiline
-            maxRows={10}
-            minRows={6}
-          />
-          <SubmitButton
-            className="create-club-submit-btn"
-            type="submit"
-            disabled={true}
-          >
-            Request
-          </SubmitButton>
-          <CancelButton
-            className="create-club-submit-btn"
-            type="submit"
-            onClick={(e) => {
-              e.preventDefault();
-              router.back();
-            }}
-          >
-            Cancel
-          </CancelButton>
-        </EventDescription>
-      </Container>
+                  setClubName(e.target.value);
+                }
+              }}
+              sx={{
+                "& .MuiInputBase-input": {
+                  fontSize: "30px",
+                },
+              }}
+            />
+            <ClubInfoInputContainer>
+              <div className="mini-info-input-form">
+                <SchoolIcon />
+                <FormControl>
+                  <Select
+                    id="campus-select"
+                    value={campus}
+                    label=""
+                    onChange={(e) => {
+                      setCampus(e.target.value);
+                    }}
+                    size="small"
+                  >
+                    {campusOption.map((campus) => {
+                      return (
+                        <MenuItem key={campus.id} value={campus.id}>
+                          {campus.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="mini-info-input-form">
+                <PublicPrivateIcon />
+                <FormControl>
+                  <Select
+                    id="public-private-select"
+                    value={isPrivate}
+                    label=""
+                    onChange={(e) => {
+                      setIsPrivate(e.target.value);
+                    }}
+                    size="small"
+                  >
+                    <MenuItem value={false}>Public</MenuItem>
+                    <MenuItem value={true}>Private</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="mini-info-input-form">
+                <EmailIcon />
+                <TextField
+                  placeholder="Email"
+                  variant="outlined"
+                  id="email-input"
+                  size="small"
+                  value={email}
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setEmail(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="mini-info-input-form">
+                <DoorIcon />
+                <TextField
+                  placeholder="Club Room"
+                  variant="outlined"
+                  id="club-room-input"
+                  size="small"
+                  value={clubRoom}
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setClubRoom(e.target.value);
+                  }}
+                />
+              </div>
+            </ClubInfoInputContainer>
+          </ClubInfoContainer>
+          <EventDescription>
+            <TextField
+              label=""
+              placeholder="Club Description"
+              multiline
+              maxRows={10}
+              minRows={6}
+              value={description}
+              onChange={(e) => {
+                e.preventDefault();
+                setDescription(e.target.value);
+              }}
+            />
+            <SubmitButton
+              className="create-club-submit-btn"
+              type="submit"
+              disabled={false}
+              onClick={(e) => {
+                e.preventDefault();
+                console.log(
+                  clubName,
+                  campus,
+                  isPrivate,
+                  email,
+                  clubRoom,
+                  description,
+                  banner
+                );
+                createClub();
+              }}
+            >
+              Request
+            </SubmitButton>
+            <CancelButton
+              className="create-club-submit-btn"
+              type="submit"
+              onClick={(e) => {
+                e.preventDefault();
+                router.back();
+              }}
+            >
+              Cancel
+            </CancelButton>
+          </EventDescription>
+        </Container>
+      )}
     </div>
   );
 }
