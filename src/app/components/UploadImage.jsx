@@ -35,7 +35,7 @@ export default function UploadImage({
         <Image
           src={previewImage}
           alt="Preview Image"
-          width={300}
+          width={400}
           height={300}
           style={{ objectFit: "cover" }}
         />
