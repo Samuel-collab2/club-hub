@@ -1,0 +1,146 @@
+@use "utils" as *;
+@use "global" as *;
+
+.upcomingEventsSection {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.upcomingEvents {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px 0px;
+  margin: 24px 0px 0px 6.14%;
+  width: 350px;
+  max-width: 85%;
+}
+.upcomingEventsHeader {
+  position: relative;
+  display: flex;
+  gap: 0px 13px;
+  width: 100%;
+  @include tn {
+    column-gap: 8px;
+  }
+}
+.upcomingEventsIcon {
+  position: relative;
+  margin: 0px 0px 3px;
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+}
+.upcomingEventsTitle {
+  position: relative;
+  font: 700 29px/1.2 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  @include md {
+    align-items: flex-start;
+    font-size: 26px;
+  }
+  @include xxs {
+    font-size: 24px;
+  }
+}
+.eventDetails {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 97.43%;
+}
+.eventImage {
+  position: relative;
+  width: 100%;
+  border-radius: 10px 10px 10px 10px;
+  object-fit: cover;
+}
+.eventHighlight {
+  position: relative;
+  margin: 11px 13px 0px;
+  font: 700 18px/1.22 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+  @include md {
+    align-items: flex-start;
+    font-size: 16px;
+  }
+  @include tn {
+    margin: 11px 8px 0px;
+  }
+}
+.eventDateRow {
+  position: relative;
+  display: flex;
+  gap: 0px 10px;
+  margin: 31px 13px 0px;
+  @include tn {
+    column-gap: 8px;
+    margin: 31px 8px 0px;
+  }
+}
+.eventDateIcon {
+  position: relative;
+  width: 25px;
+  height: 19px;
+  object-fit: cover;
+}
+.eventDateInfo {
+  position: relative;
+  margin: 3px 0px 1px;
+  font: 400 12px/1.25 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+}
+.eventStats {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 0px 10px;
+  margin: 13px 0px 0px 9px;
+  width: 206px;
+  max-width: 85%;
+  @include tn {
+    column-gap: 8px;
+    margin: 13px 0px 0px 8px;
+  }
+}
+.goingCountRow {
+  position: relative;
+  display: flex;
+  gap: 0px 5px;
+  margin: 0px 0px 2px;
+  width: 90px;
+  min-width: 0px;
+}
+.goingCountIcon {
+  position: relative;
+  width: 34px;
+  height: 27px;
+  object-fit: cover;
+}
+.goingCountInfo {
+  position: relative;
+  margin: 5px 0px 7px;
+  font: 400 12px/1.25 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+}
+.priceInfoRow {
+  position: relative;
+  display: flex;
+  gap: 0px 4px;
+  margin: 2px 0px 0px;
+  width: 69px;
+  min-width: 0px;
+}
+.priceIcon {
+  position: relative;
+  width: 35px;
+  height: 27px;
+  object-fit: cover;
+}
+.priceInfo {
+  position: relative;
+  margin: 3px 0px 9px;
+  font: 400 12px/1.25 "Inter", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+}
