@@ -23,7 +23,6 @@ export default function ClubPageEvents() {
   const [clubIsPrivate, setClubIsPrivate] = useState("Private");
   const [campusName, setCampusName] = useState("");
   const [campusAddress, setCampusAddress] = useState("");
-  const [campuses, setCampuses] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,12 +47,13 @@ export default function ClubPageEvents() {
   }, [club_id]);
 
   useEffect(() => {
-  fetch(`/api/campus`)
-    .then((res) => res.json())
-    .then((data) => {
-      setCampuses(data);
-    });
-  });
+    fetch(`/api/club/${club_id}/campus`)
+      .then((res) => res.json())
+      .then((data) => {
+        setCampusName(data.name);
+        setCampusAddress(data.address);
+      });
+  }, [club_id]);
 
   async function submitClub() {
     const res = await fetch(`/api/club/${club_id}`, {
@@ -95,11 +95,7 @@ export default function ClubPageEvents() {
               src={'/assets/a0b8f9258bd9a75755a6cd13ead688e0.png'}
               alt="alt text"
             />
-            {campuses.map((campus) => (
-              <span key={campus.id}>
-                {clubCampusId === campus.id && <h3 className={section2Styles.subtitle}>{campus.name}</h3>}
-              </span>
-            ))}
+            <h3 className={section2Styles.subtitle}>{campusName}</h3>
           </div>
 
           <div className={section2Styles.flex_row2}>
@@ -144,11 +140,7 @@ export default function ClubPageEvents() {
               src={'/assets/6922a51e98d3431ae8de16a12e63d27d.png'}
               alt="alt text"
             />
-            {campuses.map((campus) => (
-              <span key={campus.id}>
-                {clubCampusId === campus.id && <textarea className={section4Styles.content_box2} value={campus.address} onChange={(e) => setCampusAddress(e.target.value)} placeholder={campus.address}/>}
-              </span>
-            ))}
+            <textarea className={section4Styles.content_box2} value={campusAddress} onChange={(e) => setCampusAddress(e.target.value)} placeholder={campusAddress}/>
           </div>
         </div>
       </div>
