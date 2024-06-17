@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-
 import React from 'react';
 
 import { useRouter, usePathname } from "next/navigation";
@@ -11,8 +9,8 @@ import { useUser } from "@clerk/clerk-react";
 import AuthWrapper from "../../components/AuthWrapper";
 import UnbookmarkedIcon from "@mui/icons-material/BookmarkBorderTwoTone";
 import BookmarkedIcon from "@mui/icons-material/Bookmark";
-import heroSectionStyles from './heroSection.module.scss';
-import infoTabsSectionStyles from './infoTabsSection.module.scss';
+import section2Styles from './section2.module.scss';
+import section3Styles from './section3.module.scss';
 import upcomingEventsSectionStyles from './upcomingEventsSection.module.scss';
 import pastEventsSectionStyles from './pastEventsSection.module.scss';
 
@@ -112,17 +110,13 @@ export default function ClubPageEvents() {
 
   return (
     <section>
-      <div className={heroSectionStyles.heroMedia}>
-        <img
-          className={heroSectionStyles.heroImage}
-          src={clubBanner}
-          alt="alt text"
-        />
+      <div className={section2Styles.flex_row}>
+        <img className={section2Styles.image7} src={clubBanner} alt="alt text" />
 
-        <div className={heroSectionStyles.heroContent}>
-          <div className={heroSectionStyles.heroHeader}>
-            <h1 className={heroSectionStyles.heroTitle}>{clubName}</h1>
-        
+        <div className={section2Styles.flex_col}>
+          <div className={section2Styles.flex_row1}>
+            <h1 className={section2Styles.hero_title}>{clubName}</h1>
+            
             <AuthWrapper
               onClick={(e) => {
                 e.preventDefault();
@@ -134,43 +128,45 @@ export default function ClubPageEvents() {
               }}
             >
               {isItemBookmarked ? (
-                <BookmarkedIcon className={heroSectionStyles.heroIcon1} />
+                <BookmarkedIcon className={section2Styles.image3} />
               ) : (
-                <UnbookmarkedIcon className={heroSectionStyles.heroIcon1} />
+                <UnbookmarkedIcon className={section2Styles.image3} />
               )}
             </AuthWrapper>
             
             <a href={`../../dedicatedPageEdit/${club_id}`}>
-            <input type="image" className={heroSectionStyles.heroIcon2}
-              src={'/assets/bebb8c21b089f3ea8c7135d46aaafe06.svg'}
-              alt="alt text"/>
+            <input type="image" className={section2Styles.image4}
+                src={'/assets/5fb51c06444454205dbde50d3c538e97.png'}
+                alt="alt text"/>
             </a>
+
             <a href={`../../club/${club_id}/create-event`}>
-            <input type="image" className={heroSectionStyles.heroIcon2}
+            <input type="image" className={section2Styles.heroIcon2}
               src={'/assets/create_event.png'}
               alt="alt text"/>
             </a>
-          </div>
-          
-          <div className={heroSectionStyles.campusInfoRow}>
-            <img
-              className={heroSectionStyles.campusIcon}
-              src={'/assets/fedbafb18efae7dfc6c39662c0c03719.svg'}
-              alt="alt text"
-            />
-            <h3 className={heroSectionStyles.campusSubtitle}>{campusName}</h3>
+    
           </div>
 
-          <div className={heroSectionStyles.memberInfoRow}>
+          <div className={section2Styles.flex_row2}>
             <img
-              className={heroSectionStyles.memberIcon}
+              className={section2Styles.image31}
+              src={'/assets/a0b8f9258bd9a75755a6cd13ead688e0.png'}
+              alt="alt text"
+            />
+            <h3 className={section2Styles.subtitle}>{campusName}</h3>
+          </div>
+
+          <div className={section2Styles.flex_row3}>
+            <img
+              className={section2Styles.image31}
               src={'/assets/433fa6699ca1be2c2e0b2e6236e51ed5.svg'}
               alt="alt text"
             />
-            <h3 className={heroSectionStyles.memberSubtitle}>{clubIsPrivate}</h3>
+            <h3 className={section2Styles.subtitle1}>{clubIsPrivate}</h3>
           </div>
 
-          <button className={heroSectionStyles.subscribeButton}
+          <button className={section2Styles.btn}
             onClick={(e) => {
               e.preventDefault();
               fetch(`/api/club/${club_id}/subscribe`, {
@@ -194,16 +190,18 @@ export default function ClubPageEvents() {
         </div>
       </div>
 
-      <div className={infoTabsSectionStyles.infoTabs}>
-        <a href={`../../dedicatedPage/${club_id}`}>
-          <button className={infoTabsSectionStyles.tab}>About</button>
-        </a>
-        <a href={`../../clubPageEvents/${club_id}`}>
-        <button className={infoTabsSectionStyles.tab}>Events</button>
-        </a>
-        <a href={`../../members/${club_id}`}>
-        <button className={infoTabsSectionStyles.tab}>Members</button>
-        </a>
+      <div className={section3Styles.flex_col}>
+        <div className={section3Styles.flex_row}>
+          <a href={`../../dedicatedPage/${club_id}`}>
+            <button className={section3Styles.subtitle}>About</button>
+          </a>
+          <a href={`../../clubPageEvents/${club_id}`}>
+            <button className={section3Styles.subtitle}>Events</button>
+          </a>
+          <a href={`../../members/${club_id}`}>
+          <button className={section3Styles.subtitle}>Members</button>
+          </a>
+        </div>
       </div>
 
       <div className={upcomingEventsSectionStyles.upcomingEvents}>
