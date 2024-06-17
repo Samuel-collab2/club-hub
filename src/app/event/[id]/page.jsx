@@ -153,7 +153,7 @@ export default function Event({}) {
           </EventTitle>
           <EventDescription>
             <Image
-              src={eventDetail.banner}
+              src={eventDetail.banner ? eventDetail.banner : "/assets/placeholder-image.jpg"}
               alt="banner"
               width={500}
               height={300}

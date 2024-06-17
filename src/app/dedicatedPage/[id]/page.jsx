@@ -57,7 +57,7 @@ export default function DedicatedPage() {
         setClubDescription(data.description);
         setClubCampusId(data.campusId);
         setClubEmail(data.email);
-        setClubBanner(data.banner);
+        setClubBanner(data.banner ? data.banner : "/assets/placeholder-image.jpg");
 
         if(data.isPrivate == false){
           setClubIsPrivate("Public");

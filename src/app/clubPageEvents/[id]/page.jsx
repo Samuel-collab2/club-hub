@@ -225,7 +225,7 @@ export default function ClubPageEvents() {
           <a href={`../../event/${event.id}`}>
             <img
               className={upcomingEventsSectionStyles.eventImage}
-              src={event.banner}
+              src={event.banner ? event.banner : "/assets/placeholder-image.jpg"}
               alt="alt text"
             />
           </a>
@@ -295,7 +295,7 @@ export default function ClubPageEvents() {
           <a href={`../../event/${event.id}`}>
             <img
               className={pastEventsSectionStyles.pastEventImage}
-              src={event.banner}
+              src={event.banner ? event.banner : "/assets/placeholder-image.jpg"}
               alt="alt text"
             />
           </a>

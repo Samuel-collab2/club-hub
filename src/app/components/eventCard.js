@@ -15,7 +15,7 @@ const EventCard = ( { event } ) => {
                 <div id="img-container">
                     <a href= {path} >
                         <Image
-                            src={event.banner}
+                            src={event.banner ? event.banner : "/assets/placeholder-image.jpg"}
                             alt="banner"
                             width={500}
                             height={300}
