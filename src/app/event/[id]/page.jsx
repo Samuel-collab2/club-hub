@@ -94,7 +94,6 @@ export default function Event({}) {
     fetch("/api/participant/" + id)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setParticipants(data);
         setShowParticipants(true);
       });

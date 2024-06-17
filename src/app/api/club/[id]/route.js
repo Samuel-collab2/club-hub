@@ -21,7 +21,6 @@ export async function GET(req) {
     const clubId = req.nextUrl.pathname.slice(
       req.nextUrl.pathname.lastIndexOf("/") + 1
     );
-    console.log("clubId: ", clubId);
     let { data: club, error } = await Database.from("club")
       .select()
       .eq("id", clubId);

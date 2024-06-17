@@ -173,7 +173,6 @@ export default function ClubPageEvents() {
                 method: clubDetails.isSubscribed ? "DELETE" : "POST",
               }).then((response) => {
                 if (response.ok) {
-                  console.log("Subscribed to club");
                   setClubDetails({
                     ...clubDetails,
                     isSubscribed: clubDetails.isSubscribed ? false : true,
