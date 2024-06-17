@@ -92,7 +92,6 @@ export async function POST(req) {
 
         // If campusId is provided, filter data based on campusId
         if (campusId !== undefined && campusId !== null && campusId !== "Both") {
-            console.log("campusId: ", campusId);
             campusId = parseInt(campusId);
             clubData = clubData.filter((club) => club.campusId === campusId);
             eventData = await filterEventsByCampusId(eventData, campusId);
@@ -109,8 +108,6 @@ export async function POST(req) {
 
         // Combine club and event data
         const combinedData = clubData.concat(eventData);
-
-        console.log("combinedData: ", combinedData);
 
         // Sort data based on relevance score
         combinedData.sort((a, b) => {

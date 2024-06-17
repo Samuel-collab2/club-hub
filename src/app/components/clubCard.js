@@ -14,7 +14,7 @@ const ClubCard = ( { club } ) => {
                 <div id="img-container">
                     <a href= {path} >
                         <Image
-                            src={club.banner}
+                            src={club.banner ? club.banner : "/assets/placeholder-image.jpg"}
                             alt="banner"
                             width={500}
                             height={300}
