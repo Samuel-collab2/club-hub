@@ -9,11 +9,6 @@ import section2Styles from './section2.module.scss';
 import section3Styles from './section3.module.scss';
 import section4Styles from './section4.module.scss';
 
-import { createClient } from '@supabase/supabase-js'
-const supabaseUrl = 'https://gtmtrddwcdkwtcqkabfr.supabase.co'
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0bXRyZGR3Y2Rrd3RjcWthYmZyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcxNDI2MzI3NywiZXhwIjoyMDI5ODM5Mjc3fQ.b1HSvxxQtUjVEUnMHCNlkW66AqRYtUlZIRx2GR88qgg"
-const supabase = createClient(supabaseUrl, supabaseKey)
-
 import supabase from "../../database";
 
 
