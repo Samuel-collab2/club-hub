@@ -8,6 +8,9 @@ import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/clerk-react";
 
+import AuthWrapper from "../../components/AuthWrapper";
+import UnbookmarkedIcon from "@mui/icons-material/BookmarkBorderTwoTone";
+import BookmarkedIcon from "@mui/icons-material/Bookmark";
 import heroSectionStyles from './heroSection.module.scss';
 import infoTabsSectionStyles from './infoTabsSection.module.scss';
 import upcomingEventsSectionStyles from './upcomingEventsSection.module.scss';
@@ -23,10 +26,12 @@ export default function ClubPageEvents() {
   const [clubBanner, setClubBanner] = useState("");
   const [clubCampusId, setClubCampusId] = useState(0);
   const [clubIsPrivate, setClubIsPrivate] = useState("Private");
-  const [campuses, setCampuses] = useState([]);
+  const [campusName, setCampusName] = useState("");
+  const [campusAddress, setCampusAddress] = useState("");
   const [events, setEvents] = useState([]);
   const [clubDetails, setClubDetails] = useState({});
   const { isSignedIn } = useUser();
+  const [isItemBookmarked, setIsItemBookmarked] = useState(false);
 
  useEffect(() => {
     fetch(`/api/club/${club_id}/?${isSignedIn ? "subscribed=true" : ""}`)
@@ -34,6 +39,16 @@ export default function ClubPageEvents() {
       .then((data) => {
         setClubDetails(data);
       });
+  }, [club_id, isSignedIn]);
+
+  useEffect(() => {
+    if (isSignedIn) {
+      fetch("/api/club/" + club_id + "/save")
+        .then((res) => res.json())
+        .then((data) => {
+          setIsItemBookmarked(data.isSaved);
+        });
+    }
   }, [club_id, isSignedIn]);
   
   function getFormattedDate(strDate) {
@@ -87,17 +102,13 @@ export default function ClubPageEvents() {
   });
 
   useEffect(() => {
-    fetch(`/api/campus`)
+    fetch(`/api/club/${club_id}/campus`)
       .then((res) => res.json())
       .then((data) => {
-        setCampuses(data);
+        setCampusName(data.name);
+        setCampusAddress(data.address);
       });
-  });
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    submitClubSubscribe();
-  };
+  }, [club_id]);
 
   return (
     <section>
@@ -111,9 +122,24 @@ export default function ClubPageEvents() {
         <div className={heroSectionStyles.heroContent}>
           <div className={heroSectionStyles.heroHeader}>
             <h1 className={heroSectionStyles.heroTitle}>{clubName}</h1>
-            <input type="image" className={heroSectionStyles.heroIcon1}
-              src={'/assets/2152094a31abfd70bbf32f91a9554b62.svg'}
-              alt="alt text"/>
+        
+            <AuthWrapper
+              onClick={(e) => {
+                e.preventDefault();
+                fetch("/api/club/" + club_id + "/save", {
+                  method: isItemBookmarked ? "DELETE" : "POST",
+                }).then((data) => {
+                  setIsItemBookmarked(!isItemBookmarked);
+                });
+              }}
+            >
+              {isItemBookmarked ? (
+                <BookmarkedIcon className={heroSectionStyles.heroIcon1} />
+              ) : (
+                <UnbookmarkedIcon className={heroSectionStyles.heroIcon1} />
+              )}
+            </AuthWrapper>
+            
             <a href={`../../dedicatedPageEdit/${club_id}`}>
             <input type="image" className={heroSectionStyles.heroIcon2}
               src={'/assets/bebb8c21b089f3ea8c7135d46aaafe06.svg'}
@@ -132,11 +158,7 @@ export default function ClubPageEvents() {
               src={'/assets/fedbafb18efae7dfc6c39662c0c03719.svg'}
               alt="alt text"
             />
-            {campuses.map((campus) => (
-              <span key={campus.id}>
-                {clubCampusId === campus.id && <h3 className={heroSectionStyles.campusSubtitle}>{campus.name}</h3>}
-              </span>
-            ))}
+            <h3 className={heroSectionStyles.campusSubtitle}>{campusName}</h3>
           </div>
 
           <div className={heroSectionStyles.memberInfoRow}>
