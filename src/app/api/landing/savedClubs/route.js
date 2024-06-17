@@ -43,11 +43,9 @@ export async function POST(req) {
     let subscribedClubs = []
     // Grab events saved to user + add club name (needed for landing page)
     for (var item of clubSubscriberData.data) {
-        console.log(item)
         let clubItem = await Database.from("club")
             .select()
             .eq('id', item.clubId)
-        console.log(clubItem)
 
         subscribedClubs.push(clubItem.data[0])
       }

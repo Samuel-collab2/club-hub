@@ -83,7 +83,7 @@ export default function ClubPageEvents() {
       .then((data) => {
         setClubName(data.name);
         setClubCampusId(data.campusId);
-        setClubBanner(data.banner);
+        setClubBanner(data.banner ? data.banner : '/assets/placeholder-image.jpg');
         
         if(data.isPrivate == false){
           setClubIsPrivate("Public");
@@ -173,7 +173,6 @@ export default function ClubPageEvents() {
                 method: clubDetails.isSubscribed ? "DELETE" : "POST",
               }).then((response) => {
                 if (response.ok) {
-                  console.log("Subscribed to club");
                   setClubDetails({
                     ...clubDetails,
                     isSubscribed: clubDetails.isSubscribed ? false : true,
@@ -225,7 +224,7 @@ export default function ClubPageEvents() {
           <a href={`../../event/${event.id}`}>
             <img
               className={upcomingEventsSectionStyles.eventImage}
-              src={event.banner}
+              src={event.banner ? event.banner : '/assets/placeholder-image.jpg'}
               alt="alt text"
             />
           </a>
@@ -295,7 +294,7 @@ export default function ClubPageEvents() {
           <a href={`../../event/${event.id}`}>
             <img
               className={pastEventsSectionStyles.pastEventImage}
-              src={event.banner}
+              src={event.banner ? event.banner : '/assets/placeholder-image.jpg'}
               alt="alt text"
             />
           </a>
