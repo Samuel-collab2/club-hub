@@ -2,7 +2,7 @@ import Image from "next/image";
 import styled from "styled-components";
 
 const ClubCard = ( { club } ) => {
-    const path = "/club/" + club.id
+    const path = "/dedicatedPage/" + club.id
 
     const clubName = club.name;
     // Use titleCondition to change event tile size to better fit inside card based on title character length
