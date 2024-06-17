@@ -75,7 +75,7 @@ export default function DedicatedPage() {
   }, [club_id]);
   
   return (
-    <section className={section2Styles.section2}>
+    <section>
       <div className={section2Styles.flex_row}>
         <img className={section2Styles.image7} src={clubBanner} alt="alt text" />
 
