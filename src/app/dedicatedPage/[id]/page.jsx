@@ -6,6 +6,9 @@ import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/clerk-react";
 
+import AuthWrapper from "../../components/AuthWrapper";
+import UnbookmarkedIcon from "@mui/icons-material/BookmarkBorderTwoTone";
+import BookmarkedIcon from "@mui/icons-material/Bookmark";
 import section2Styles from './section2.module.scss';
 import section3Styles from './section3.module.scss';
 import section4Styles from './section4.module.scss';
@@ -22,9 +25,11 @@ export default function DedicatedPage() {
   const [clubEmail, setClubEmail] = useState("");
   const [clubBanner, setClubBanner] = useState("");
   const [clubIsPrivate, setClubIsPrivate] = useState("Private");
-  const [campuses, setCampuses] = useState([]);
+  const [campusName, setCampusName] = useState("");
+  const [campusAddress, setCampusAddress] = useState("");
   const [clubDetails, setClubDetails] = useState({});
   const { isSignedIn } = useUser();
+  const [isItemBookmarked, setIsItemBookmarked] = useState(false);
 
   useEffect(() => {
     fetch(`/api/club/${club_id}/?${isSignedIn ? "subscribed=true" : ""}`)
@@ -32,6 +37,16 @@ export default function DedicatedPage() {
       .then((data) => {
         setClubDetails(data);
       });
+  }, [club_id, isSignedIn]);
+
+  useEffect(() => {
+    if (isSignedIn) {
+      fetch("/api/club/" + club_id + "/save")
+        .then((res) => res.json())
+        .then((data) => {
+          setIsItemBookmarked(data.isSaved);
+        });
+    }
   }, [club_id, isSignedIn]);
   
   useEffect(() => {
@@ -51,35 +66,46 @@ export default function DedicatedPage() {
     }, [club_id]);
 
   useEffect(() => {
-  fetch(`/api/campus`)
-    .then((res) => res.json())
-    .then((data) => {
-      setCampuses(data);
-    });
-  });
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    submitClubSubscribe();
-  };
+    fetch(`/api/club/${club_id}/campus`)
+      .then((res) => res.json())
+      .then((data) => {
+        setCampusName(data.name);
+        setCampusAddress(data.address);
+      });
+  }, [club_id]);
   
   return (
     <section className={section2Styles.section2}>
-      <form onSubmit={handleSubmit}>
       <div className={section2Styles.flex_row}>
         <img className={section2Styles.image7} src={clubBanner} alt="alt text" />
 
         <div className={section2Styles.flex_col}>
           <div className={section2Styles.flex_row1}>
             <h1 className={section2Styles.hero_title}>{clubName}</h1>
-            <input type="image" className={section2Styles.image3}
-                src={'/assets/7ca9d58c7e64329a243f5270e4daacc4.png'}
-                alt="alt text"/>
+            
+            <AuthWrapper
+              onClick={(e) => {
+                e.preventDefault();
+                fetch("/api/club/" + club_id + "/save", {
+                  method: isItemBookmarked ? "DELETE" : "POST",
+                }).then((data) => {
+                  setIsItemBookmarked(!isItemBookmarked);
+                });
+              }}
+            >
+              {isItemBookmarked ? (
+                <BookmarkedIcon className={section2Styles.image3} />
+              ) : (
+                <UnbookmarkedIcon className={section2Styles.image3} />
+              )}
+            </AuthWrapper>
+            
             <a href={`../../dedicatedPageEdit/${club_id}`}>
             <input type="image" className={section2Styles.image4}
                 src={'/assets/5fb51c06444454205dbde50d3c538e97.png'}
                 alt="alt text"/>
             </a>
+    
           </div>
 
           <div className={section2Styles.flex_row2}>
@@ -88,11 +114,7 @@ export default function DedicatedPage() {
               src={'/assets/a0b8f9258bd9a75755a6cd13ead688e0.png'}
               alt="alt text"
             />
-            {campuses.map((campus) => (
-              <span key={campus.id}>
-                {clubCampusId === campus.id && <h3 className={section2Styles.subtitle}>{campus.name}</h3>}
-              </span>
-            ))}
+            <h3 className={section2Styles.subtitle}>{campusName}</h3>
           </div>
 
           <div className={section2Styles.flex_row3}>
@@ -173,15 +195,10 @@ export default function DedicatedPage() {
               src={'/assets/6922a51e98d3431ae8de16a12e63d27d.png'}
               alt="alt text"
             />
-            {campuses.map((campus) => (
-              <span key={campus.id}>
-                {clubCampusId === campus.id && <h5 className={section4Styles.highlight11}>{campus.address}</h5>}
-              </span>
-            ))}
+            <h5 className={section4Styles.highlight11}>{campusAddress}</h5>
           </div>
         </div>
       </div>
-      </form>
     </section>
   );
 }
