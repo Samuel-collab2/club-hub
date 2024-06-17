@@ -1,6 +1,7 @@
 import Database from "../../database";
 import { NextResponse } from "next/server";
 import { decode } from "base64-arraybuffer";
+import sendMail from "../../support/nodeMailer";
 
 // POST /api/event
 export async function POST(req) {
@@ -26,6 +27,7 @@ export async function POST(req) {
     const eventImage = banner.split("base64,")[1];
     let bannerUrl;
 
+    // Upload banner image to storage
     const { data: bannerImageData, error: uploadBannerError } =
       await Database.storage
         .from("eventImage")
@@ -44,6 +46,7 @@ export async function POST(req) {
       bannerUrl = url.publicUrl;
     }
 
+    // Insert event into database
     const { data, error } = await Database.from("event")
       .insert([
         {
@@ -59,7 +62,29 @@ export async function POST(req) {
       ])
       .select();
 
-    if (error) {
+    // Send email to club members
+    const { data: clubMembers, error: clubMembersError } = await Database.from(
+      "clubSubscriber"
+    )
+      .select("clubId, user (firstName, email)")
+      .eq("clubId", clubId);
+    const clubMembersEmails = clubMembers.map((member) => member.user.email);
+    const eventDate = new Date(dateTime);
+    const options = {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    };
+    const formattedDate = eventDate.toLocaleDateString(undefined, options);
+    await sendMail(
+      clubMembersEmails,
+      "New Event Created",
+      `A new event ${name} has been created on ${formattedDate} at ${location}!`
+    );
+    // return NextResponse.json(data[0]);
+
+    if (error || clubMembersError) {
       throw new Error(error);
     } else {
       return NextResponse.json(data[0]);
