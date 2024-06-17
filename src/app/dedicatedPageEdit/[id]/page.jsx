@@ -38,7 +38,7 @@ export default function ClubPageEvents() {
         setClubDescription(data.description);
         setClubCampusId(data.campusId);
         setClubEmail(data.email);
-        setClubBanner(data.banner);
+        setClubBanner(data.banner ? data.banner : "/default-event-banner.jpg");
 
         if(data.isPrivate == false){
           setClubIsPrivate("Public");
