@@ -28,8 +28,9 @@ export default function DedicatedPage() {
   const [campusName, setCampusName] = useState("");
   const [campusAddress, setCampusAddress] = useState("");
   const [clubDetails, setClubDetails] = useState({});
-  const { isSignedIn } = useUser();
+  const { isSignedIn, user } = useUser();
   const [isItemBookmarked, setIsItemBookmarked] = useState(false);
+  const [editAccess, setEditAccess] = useState(false);
 
   useEffect(() => {
     fetch(`/api/club/${club_id}/?${isSignedIn ? "subscribed=true" : ""}`)
@@ -73,7 +74,18 @@ export default function DedicatedPage() {
         setCampusAddress(data.address);
       });
   }, [club_id]);
-  
+
+  async function checkAccess() {
+    const res = await fetch(`/api/checkRole`);
+    const data = await res.json();
+    if (data.role === "Admin" || data.role === "Manager")
+      setEditAccess(true);
+  }
+
+  useEffect(() => {
+    checkAccess();
+  }, [editAccess])
+
   return (
     <section>
       <div className={section2Styles.flex_row}>
@@ -100,11 +112,13 @@ export default function DedicatedPage() {
               )}
             </AuthWrapper>
             
-            <a href={`../../dedicatedPageEdit/${club_id}`}>
-            <input type="image" className={section2Styles.image4}
-                src={'/assets/5fb51c06444454205dbde50d3c538e97.png'}
-                alt="alt text"/>
-            </a>
+            {editAccess && (
+              <a href={`../../dedicatedPageEdit/${club_id}`}>
+                <input type="image" className={section2Styles.image4}
+                    src={'/assets/5fb51c06444454205dbde50d3c538e97.png'}
+                    alt="alt text"/>
+              </a>
+            )}
     
           </div>
 
@@ -172,7 +186,7 @@ export default function DedicatedPage() {
           <h4 className={section4Styles.highlight3}>Send Us a Message 📬</h4>
 
           <div className={section4Styles.content_box1}>
-            <form action={"mailto:" + clubEmail} method="post" enctype="text/plain">
+            <form action={"mailto:" + clubEmail} method="post" encType="text/plain">
               <textarea className={section4Styles.content_box}/>
               <input type="image" className={section4Styles.image5}
                     src={'/assets/d58a14e2e1e7721ffe1193453276d567.png'}

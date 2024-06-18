@@ -4,6 +4,7 @@ import React from 'react';
 
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useUser } from "@clerk/clerk-react";
 
 import section2Styles from './section2.module.scss';
 import section3Styles from './section3.module.scss';
@@ -15,6 +16,16 @@ export default function ClubPageEvents() {
   const pathname = usePathname();
   const club_id = pathname.split("/")[2];
 
+
+  async function checkRole() {
+    const res = await fetch(`/api/checkRole`);
+    const data = await res.json();
+    if (data.role != "Admin" && data.role != "Manager")
+      router.push(`/dedicatedPage/${club_id}`);
+  }
+  checkRole();
+
+  
   const [clubName, setClubName] = useState("");
   const [clubDescription, setClubDescription] = useState("");
   const [clubCampusId, setClubCampusId] = useState(0);
