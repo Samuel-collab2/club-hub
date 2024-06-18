@@ -28,6 +28,7 @@ export default function Home() {
       includePastEvents: defaultFilters.includePastEvents
     });
 
+
       const [data, setData] = useState({ data: [{
         "name": "",
         "description": "",
@@ -47,6 +48,8 @@ export default function Home() {
           };
     };
 
+
+
     const switchLoadingPage = (loading) => {
         if (loading) {
           document.body.style.cursor = "wait";
@@ -62,6 +65,7 @@ export default function Home() {
     useEffect(() => {
         const initialFilters = getQueryParameters();
         filters.keyword = initialFilters.keyword;
+        filters.campusId = initialFilters.campusId;
         sendQuery();
       }, []);
 
