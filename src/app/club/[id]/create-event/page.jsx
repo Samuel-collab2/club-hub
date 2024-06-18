@@ -44,10 +44,9 @@ export default function CreateEventPage() {
   const clubId = pathname.split("/")[2];
 
   useEffect(() => {
-    if (role !== "Admin"){
-      if (!validClubIds.includes(parseInt(clubId))) {
-        return;
-      }
+
+    if (role !== "Admin" && (validClubIds?.includes(parseInt(club_id)) !== true)) {
+      return;
     }
 
     fetch(`/api/club/${clubId}`)
@@ -59,14 +58,12 @@ export default function CreateEventPage() {
     return <p>Loading...</p>;
   }
 
-  if (role !== "Admin") {
-    if (!validClubIds.includes(parseInt(clubId))) {
-      return (
-        <div>
-          <h1>You do not have permission to view this page</h1>
-        </div>
-      );
-    }
+  if (role !== "Admin" && (validClubIds?.includes(parseInt(club_id)) !== true)) {
+    return (
+      <div>
+        <h1>You do not have permission to view this page</h1>
+      </div>
+    );
   }
 
   const createEvent = async () => {

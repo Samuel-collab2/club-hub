@@ -45,10 +45,8 @@ export default function ClubPageEvents() {
   };
 
   useEffect(() => {
-    if (role !== "Admin"){
-      if (!validClubIds.includes(parseInt(club_id))) {
-        return;
-      }
+    if (role !== "Admin" && (validClubIds?.includes(parseInt(club_id)) !== true)) {
+      return;
     }
 
 
@@ -80,16 +78,13 @@ export default function ClubPageEvents() {
     return <p>Loading...</p>;
   }
 
-  if (role !== "Admin") {
-    if (!validClubIds.includes(parseInt(club_id))) {
-      return (
-        <div>
-          <h1>You do not have permission to view this page</h1>
-        </div>
-      );
-    }
+  if (role !== "Admin" && (validClubIds?.includes(parseInt(club_id)) !== true)) {
+    return (
+      <div>
+        <h1>You do not have permission to view this page</h1>
+      </div>
+    );
   }
-
 
   async function submitClub() {
     const res = await fetch(`/api/club/${club_id}`, {
