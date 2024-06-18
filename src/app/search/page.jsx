@@ -118,7 +118,6 @@ export default function Home() {
   
     const getNearestPages = () => {
       let nearestPages = [];
-      console.log(filters.page)
       for (let i = filters.page; nearestPages.length < 5; i++) {
         // Add pages before current page
         if (filters.page !== i && i > 3) {

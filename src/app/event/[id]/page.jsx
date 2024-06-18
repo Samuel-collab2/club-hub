@@ -94,7 +94,6 @@ export default function Event({}) {
     fetch("/api/participant/" + id)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setParticipants(data);
         setShowParticipants(true);
       });
@@ -153,7 +152,7 @@ export default function Event({}) {
           </EventTitle>
           <EventDescription>
             <Image
-              src={eventDetail.banner}
+              src={eventDetail.banner ? eventDetail.banner : "/default-event-banner.jpg"}
               alt="banner"
               width={500}
               height={300}
