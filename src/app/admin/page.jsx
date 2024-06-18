@@ -11,8 +11,22 @@ export default function Admin() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [view, setView] = useState('club'); // 'club' or 'user'
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
+    async function checkRole() {
+      const res = await fetch(`/api/checkRole`);
+      const data = await res.json();
+      setRole(data.role);
+    }
+    checkRole();
+  }, []);
+
+  useEffect(() => {
+    if (role !== 'Admin') {
+      return;
+    }
+
     const fetchData = async () => {
       setLoading(true);
       setError(null);
@@ -32,7 +46,19 @@ export default function Admin() {
     };
 
     fetchData();
-  }, [view]);
+  }, [view, role]);
+
+  if (role === null) {
+    return <p>Loading...</p>;
+  }
+
+  if (role !== 'Admin') {
+    return (
+      <div>
+        <h1>You do not have permission to view this page</h1>
+      </div>
+    );
+  }
 
   const handleApprove = async (id, type) => {
     try {

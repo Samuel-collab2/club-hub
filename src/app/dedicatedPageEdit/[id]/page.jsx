@@ -15,22 +15,25 @@ export default function ClubPageEvents() {
   const router = useRouter();
   const pathname = usePathname();
   const club_id = pathname.split("/")[2];
+  const [role, setRole] = useState(null);
+  const [validClubIds, setValidClubIds] = useState([]);
 
-
-  async function checkRole() {
-    const res = await fetch(`/api/checkRole`);
-    const data = await res.json();
-    if (data.role != "Admin" && data.role != "Manager")
-      router.push(`/dedicatedPage/${club_id}`);
-  }
-  checkRole();
+  useEffect(() => {
+    async function checkRole() {
+      const res = await fetch(`/api/checkRole`);
+      const data = await res.json();
+      setRole(data.role);
+      setValidClubIds(data.clubIds);
+    }
+    checkRole();
+  }, []);
 
   
   const [clubName, setClubName] = useState("");
   const [clubDescription, setClubDescription] = useState("");
   const [clubCampusId, setClubCampusId] = useState(0);
   const [clubEmail, setClubEmail] = useState("");
-  const [clubBanner, setClubBanner] = useState("");
+  const [clubBanner, setClubBanner] = useState("/assets/placeholder-image.jpg");
   const [clubIsPrivate, setClubIsPrivate] = useState("Private");
   const [campusName, setCampusName] = useState("");
   const [campusAddress, setCampusAddress] = useState("");
@@ -42,6 +45,13 @@ export default function ClubPageEvents() {
   };
 
   useEffect(() => {
+    if (role !== "Admin"){
+      if (!validClubIds.includes(club_id)) {
+        return;
+      }
+    }
+
+
     fetch(`/api/club/${club_id}`)
       .then((res) => res.json())
       .then((data) => {
@@ -55,7 +65,7 @@ export default function ClubPageEvents() {
           setClubIsPrivate("Public");
         }
       });
-  }, [club_id]);
+  }, [club_id, role]);
 
   useEffect(() => {
     fetch(`/api/club/${club_id}/campus`)
@@ -65,6 +75,21 @@ export default function ClubPageEvents() {
         setCampusAddress(data.address);
       });
   }, [club_id]);
+
+  if (role === null) {
+    return <p>Loading...</p>;
+  }
+
+  if (role !== "Admin") {
+    if (!validClubIds.includes(club_id)) {
+      return (
+        <div>
+          <h1>You do not have permission to view this page</h1>
+        </div>
+      );
+    }
+  }
+
 
   async function submitClub() {
     const res = await fetch(`/api/club/${club_id}`, {
