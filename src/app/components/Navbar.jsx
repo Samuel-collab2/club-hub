@@ -1,11 +1,17 @@
 "use client";
 
 import styled from "styled-components";
+import { useState } from "react";
+import Image from "next/image";
 import LoginIcon from "@mui/icons-material/LoginTwoTone";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
-import { useUser } from "@clerk/clerk-react"
-import { useEffect } from "react"
+import { useUser } from "@clerk/clerk-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import { useClerk } from "@clerk/clerk-react";
 
@@ -13,7 +19,12 @@ import Logo from "./Logo";
 import SearchBar from "./SearchBar";
 
 export default function Navbar({}) {
-  const { isSignedIn } = useUser();
+  const { isSignedIn, user } = useUser();
+  const { signOut } = useClerk();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const router = useRouter();
+
   useEffect(() => {
     if (isSignedIn) {
       fetch("/api/login/addToSupabase", {
@@ -25,6 +36,10 @@ export default function Navbar({}) {
     }
   }, [isSignedIn]);
 
+  function handleClose() {
+    setAnchorEl(null);
+  }
+
   return (
     <NavbarContainer>
       <Logo id="logo" />
@@ -34,7 +49,44 @@ export default function Navbar({}) {
           <LoginBtn id="login-btn" />
         </SignedOut>
         <SignedIn>
-          <UserButton userProfileMode="modal" style={{ right: 0 }} />
+          <Button
+            onClick={(e) => {
+              setAnchorEl(e.currentTarget);
+            }}
+          >
+            <Image
+              src={user?.imageUrl}
+              alt="user"
+              width={50}
+              height={50}
+              style={{ borderRadius: "50%" }}
+            />
+          </Button>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+          >
+            <MenuItem
+              onClick={(e) => {
+                e.preventDefault();
+                router.push("/club-request");
+              }}
+            >
+              Create Club
+            </MenuItem>
+            <MenuItem onClick={handleClose}>Approval List</MenuItem>
+            <MenuItem
+              onClick={() => signOut({ redirectUrl: "/" })}
+              style={{ color: "red" }}
+            >
+              Logout
+            </MenuItem>
+          </Menu>
         </SignedIn>
       </span>
     </NavbarContainer>
