@@ -97,7 +97,7 @@ export default function ClubPageEvents() {
       .then((data) => {
         setEvents(data);
       });
-  });
+  }, [club_id]);
 
   useEffect(() => {
     fetch(`/api/club/${club_id}/campus`)
