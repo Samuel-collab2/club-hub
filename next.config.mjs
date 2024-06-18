@@ -4,7 +4,11 @@ const nextConfig = {
     styledComponents: true,
   },
   images: {
-    domains: ["images.unsplash.com", "gtmtrddwcdkwtcqkabfr.supabase.co"],
+    domains: [
+      "images.unsplash.com",
+      "gtmtrddwcdkwtcqkabfr.supabase.co",
+      "img.clerk.com",
+    ],
   },
 };
 ;
