@@ -34,6 +34,58 @@ export default function Admin() {
     fetchData();
   }, [view]);
 
+  const handleApprove = async (id, type) => {
+    try {
+      const response = await fetch(`/api/${type}/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ isApproved: true }),
+      });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      setData((prevData) =>
+        prevData.map((item) =>
+          item.id === id ? { ...item, isApproved: true } : item
+        )
+      );
+
+      toast.success(`${type === 'club' ? 'Club' : 'User'} approved successfully!`);
+    } catch (error) {
+      console.error(`Failed to approve ${type}:`, error);
+      toast.error(`Failed to approve ${type}: ${error.message}`);
+    }
+  };
+
+  const handleReject = async (id, type) => {
+    try {
+      const response = await fetch(`/api/${type}/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ isApproved: false }),
+      });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      setData((prevData) =>
+        prevData.map((item) =>
+          item.id === id ? { ...item, isApproved: false } : item
+        )
+      );
+
+      toast.success(`${type === 'club' ? 'Club' : 'User'} rejected successfully!`);
+    } catch (error) {
+      console.error(`Failed to reject ${type}:`, error);
+      toast.error(`Failed to reject ${type}: ${error.message}`);
+    }
+  };
+
   const handleSwitchRole = async (id) => {
     try {
       const response = await fetch(`/api/user/${id}`, {
