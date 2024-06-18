@@ -45,7 +45,7 @@ export default function CreateEventPage() {
 
   useEffect(() => {
 
-    if (role !== "Admin" && (validClubIds?.includes(parseInt(club_id)) !== true)) {
+    if (role !== "Admin" && (validClubIds?.includes(parseInt(clubId)) !== true)) {
       return;
     }
 
@@ -58,7 +58,7 @@ export default function CreateEventPage() {
     return <p>Loading...</p>;
   }
 
-  if (role !== "Admin" && (validClubIds?.includes(parseInt(club_id)) !== true)) {
+  if (role !== "Admin" && (validClubIds?.includes(parseInt(clubId)) !== true)) {
     return (
       <div>
         <h1>You do not have permission to view this page</h1>
