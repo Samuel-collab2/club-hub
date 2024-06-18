@@ -46,7 +46,7 @@ export default function ClubPageEvents() {
 
   useEffect(() => {
     if (role !== "Admin"){
-      if (!validClubIds.includes(club_id)) {
+      if (!validClubIds.includes(parseInt(club_id))) {
         return;
       }
     }
@@ -81,7 +81,7 @@ export default function ClubPageEvents() {
   }
 
   if (role !== "Admin") {
-    if (!validClubIds.includes(club_id)) {
+    if (!validClubIds.includes(parseInt(club_id))) {
       return (
         <div>
           <h1>You do not have permission to view this page</h1>
