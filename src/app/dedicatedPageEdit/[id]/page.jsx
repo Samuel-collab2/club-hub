@@ -114,7 +114,6 @@ export default function ClubPageEvents() {
 
   return (
     <section>
-      <form onSubmit={handleSubmit}>
       <div className={section2Styles.flex_row}>
         <img className={section2Styles.image6} src={clubBanner} alt="alt text" />
         {/* '/assets/aea99ada115ff3911f9f589ad27ae004.png' */}
@@ -137,8 +136,9 @@ export default function ClubPageEvents() {
             />
             <h3 className={section2Styles.subtitle1}>{clubIsPrivate}</h3>
           </div>
-
-          <button className={section2Styles.btn} type="submit">SAVE</button>
+          <form onSubmit={handleSubmit}>
+            <button className={section2Styles.btn} type="submit">SAVE</button>
+          </form>
         </div>
       </div>
       <div className={section3Styles.flex_row}>
@@ -175,7 +175,6 @@ export default function ClubPageEvents() {
           </div>
         </div>
       </div>
-      </form>
     </section>
   );
 }
