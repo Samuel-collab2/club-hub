@@ -65,7 +65,7 @@ export default function LoggedInLanding({userId}) {
         fetchSavedClubs();
     }, []);
 
-    if (Object.keys(savedEvents).length === 0) {
+    if (Object.keys(savedEvents).length === 0 && Object.keys(savedClubs).length === 0) {
         return (
             <>
                 <SectionTitle>
