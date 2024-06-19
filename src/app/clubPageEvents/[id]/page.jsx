@@ -6,9 +6,6 @@ import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/clerk-react";
 
-import AuthWrapper from "../../components/AuthWrapper";
-import UnbookmarkedIcon from "@mui/icons-material/BookmarkBorderTwoTone";
-import BookmarkedIcon from "@mui/icons-material/Bookmark";
 import section2Styles from './section2.module.scss';
 import section3Styles from './section3.module.scss';
 import upcomingEventsSectionStyles from './upcomingEventsSection.module.scss';
@@ -29,7 +26,6 @@ export default function ClubPageEvents() {
   const [events, setEvents] = useState([]);
   const [clubDetails, setClubDetails] = useState({});
   const { isSignedIn } = useUser();
-  const [isItemBookmarked, setIsItemBookmarked] = useState(false);
 
  useEffect(() => {
     fetch(`/api/club/${club_id}/?${isSignedIn ? "subscribed=true" : ""}`)
@@ -37,16 +33,6 @@ export default function ClubPageEvents() {
       .then((data) => {
         setClubDetails(data);
       });
-  }, [club_id, isSignedIn]);
-
-  useEffect(() => {
-    if (isSignedIn) {
-      fetch("/api/club/" + club_id + "/save")
-        .then((res) => res.json())
-        .then((data) => {
-          setIsItemBookmarked(data.isSaved);
-        });
-    }
   }, [club_id, isSignedIn]);
   
   function getFormattedDate(strDate) {
@@ -116,23 +102,6 @@ export default function ClubPageEvents() {
         <div className={section2Styles.flex_col}>
           <div className={section2Styles.flex_row1}>
             <h1 className={section2Styles.hero_title}>{clubName}</h1>
-            
-            <AuthWrapper
-              onClick={(e) => {
-                e.preventDefault();
-                fetch("/api/club/" + club_id + "/save", {
-                  method: isItemBookmarked ? "DELETE" : "POST",
-                }).then((data) => {
-                  setIsItemBookmarked(!isItemBookmarked);
-                });
-              }}
-            >
-              {isItemBookmarked ? (
-                <BookmarkedIcon className={section2Styles.image3} />
-              ) : (
-                <UnbookmarkedIcon className={section2Styles.image3} />
-              )}
-            </AuthWrapper>
             
             <a href={`../../dedicatedPageEdit/${club_id}`}>
             <input type="image" className={section2Styles.image4}
