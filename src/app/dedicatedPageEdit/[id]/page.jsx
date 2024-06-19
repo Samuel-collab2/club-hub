@@ -148,9 +148,6 @@ export default function ClubPageEvents() {
         <a href={`../../clubPageEvents/${club_id}`}>
           <button className={section3Styles.subtitle1}>Events</button>
         </a>
-        <a href={`../../members/${club_id}`}>
-        <button className={section3Styles.subtitle1}>Members</button>
-        </a>
       </div>
       <div className={section4Styles.flex_row}>
         <textarea className={section4Styles.content_box1} value={clubDescription} onChange={(e) => setClubDescription(e.target.value)} placeholder={clubDescription}></textarea>
