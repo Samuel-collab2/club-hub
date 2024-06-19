@@ -12,6 +12,8 @@ async function query(keyword, table){
         query = query.select("id, clubId, name, description, dateTime, banner");
     } else {
         query = query.select("id, name, description, campusId, banner");
+
+        query.eq("isApproved", true);
     }
 
 
