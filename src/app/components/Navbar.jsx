@@ -79,7 +79,13 @@ export default function Navbar({}) {
             >
               Create Club
             </MenuItem>
-            <MenuItem onClick={handleClose}>Approval List</MenuItem>
+            <MenuItem
+              onClick={() => {
+                router.push("/admin");
+              }}
+            >
+              Approval List
+            </MenuItem>
             <MenuItem
               onClick={() => signOut({ redirectUrl: "/" })}
               style={{ color: "red" }}
