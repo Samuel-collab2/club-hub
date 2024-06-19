@@ -10,6 +10,10 @@ export async function GET() {
       return NextResponse.json({ role: "Student"})
     }
 
+    if (user.publicMetadata.role === undefined) {
+      return NextResponse.json({ role: "Student" });
+    }
+
     if(user.publicMetadata.clubIds !== undefined) {
         return NextResponse.json({ role: "Manager", clubIds: user.publicMetadata.clubIds });
     }

@@ -36,6 +36,7 @@ export default function Event({}) {
   const [clubDetail, setClubDetail] = useState({});
   const [showParticipants, setShowParticipants] = useState(false);
   const [participants, setParticipants] = useState([]);
+  const [userRole, setUserRole] = useState("Student");
 
   useEffect(() => {
     fetch(
@@ -57,6 +58,12 @@ export default function Event({}) {
         .then((data) => {
           setIsItemBookmarked(data.isSaved);
         });
+
+      fetch("/api/checkRole")
+        .then((res) => res.json())
+        .then((data) => {
+          setUserRole(data.role);
+        })
     }
   }, [id, isSignedIn]);
 
@@ -130,7 +137,7 @@ export default function Event({}) {
                   <UnbookmarkedIcon fontSize="big" className="cursor-item" />
                 )}
               </AuthWrapper>
-              {new Date(eventDetail.dateTime) > new Date() && (
+              {new Date(eventDetail.dateTime) > new Date() && userRole !== "Student" && (
                 <PencilIcon
                   className="cursor-item"
                   onClick={(e) => {
