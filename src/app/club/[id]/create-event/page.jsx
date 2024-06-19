@@ -26,16 +26,45 @@ export default function CreateEventPage() {
   const [isVirtual, setIsVirtual] = useState(false);
   const [clubName, setClubName] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
+  const [role, setRole] = useState(null);
+  const [validClubIds, setValidClubIds] = useState([]);
+
+  useEffect(() => {
+    async function checkRole() {
+      const res = await fetch(`/api/checkRole`);
+      const data = await res.json();
+      setRole(data.role);
+      setValidClubIds(data.clubIds);
+    }
+    checkRole();
+  }, []);
 
   const router = useRouter();
   const pathname = usePathname();
   const clubId = pathname.split("/")[2];
 
   useEffect(() => {
+
+    if (role !== "Admin" && (validClubIds?.includes(parseInt(clubId)) !== true)) {
+      return;
+    }
+
     fetch(`/api/club/${clubId}`)
       .then((res) => res.json())
       .then((data) => setClubName(data.name));
   }, [clubId]);
+
+  if (role === null) {
+    return <p>Loading...</p>;
+  }
+
+  if (role !== "Admin" && (validClubIds?.includes(parseInt(clubId)) !== true)) {
+    return (
+      <div>
+        <h1>You do not have permission to view this page</h1>
+      </div>
+    );
+  }
 
   const createEvent = async () => {
     const res = await fetch("/api/event/", {

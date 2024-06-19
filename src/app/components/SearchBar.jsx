@@ -22,7 +22,7 @@ export default function SearchBar({ ...props }) {
 
   const handleSearch = () => {
     if (input !== '') {
-      const newUrl = `/search?keyword=${input}`;
+      const newUrl = `/search?keyword=${input}&campusId=${document.getElementById("campus-select").value}`;
       router.push(newUrl);
       window.location.href = newUrl;
     }
