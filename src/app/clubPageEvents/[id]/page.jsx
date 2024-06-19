@@ -166,9 +166,6 @@ export default function ClubPageEvents() {
           <a href={`../../clubPageEvents/${club_id}`}>
             <button className={section3Styles.subtitle}>Events</button>
           </a>
-          <a href={`../../members/${club_id}`}>
-          <button className={section3Styles.subtitle}>Members</button>
-          </a>
         </div>
       </div>
 
