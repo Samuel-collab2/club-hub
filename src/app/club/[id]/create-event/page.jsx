@@ -125,7 +125,6 @@ export default function CreateEventPage() {
                 },
               }}
             />
-            <p>by {clubName}</p>
           </div>
           <EventInfoInputContainer>
             <div className="mini-info-input-form">
